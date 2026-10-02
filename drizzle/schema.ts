@@ -1,1 +1,1 @@
-// auto-generated and intentionally left blank, do not edit
+// This file is required by Drizzle Kit. Do not edit it directly.
