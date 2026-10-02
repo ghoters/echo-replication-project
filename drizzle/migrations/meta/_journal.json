@@ -1,20 +1,5 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1790961190557,
-      "tag": "0000_create_core_customer_orders",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1790961216948,
-      "tag": "0001_add_order_workflow",
-      "breakpoints": true
-    }
-  ]
+  "entries": []
 }
