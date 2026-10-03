@@ -1,11 +1,11 @@
 {
-  "version": 1,
   "asset_id": "8681e627-8ead-43ed-8a16-6bede7936145",
-  "project_id": "dc6d7d4b-49ba-4116-a3db-3a52dd497b81",
-  "url": "/__l5e/assets-v1/8681e627-8ead-43ed-8a16-6bede7936145/opakowanie-prezentowe.jpg",
-  "r2_key": "a/v1/dc6d7d4b-49ba-4116-a3db-3a52dd497b81/8681e627-8ead-43ed-8a16-6bede7936145/opakowanie-prezentowe.jpg",
-  "original_filename": "opakowanie-prezentowe.jpg",
-  "size": 137968,
   "content_type": "image/jpeg",
-  "created_at": "2026-10-03T01:50:32Z"
+  "created_at": "2026-10-03T01:50:32Z",
+  "original_filename": "opakowanie-prezentowe.jpg",
+  "project_id": "d3fa59bd-b19f-4ad6-8918-179b28425315",
+  "r2_key": "a/v1/d3fa59bd-b19f-4ad6-8918-179b28425315/8681e627-8ead-43ed-8a16-6bede7936145/opakowanie-prezentowe.jpg",
+  "size": 137968,
+  "url": "/__l5e/assets-v1/8681e627-8ead-43ed-8a16-6bede7936145/opakowanie-prezentowe.jpg",
+  "version": 1
 }
