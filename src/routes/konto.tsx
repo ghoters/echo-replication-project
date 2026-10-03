@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  ArrowRight, Bell, Box, Camera, CheckCircle2, ChevronRight, Clock3, CreditCard,
+  ArrowRight, Bell, Box, Camera, CheckCircle2, ChevronRight, Clock3, CreditCard, Download,
   FileText, Lightbulb, LogOut, Mail, MapPin, MoreVertical, Package, Paintbrush,
   Pencil, Phone, Plus, Search, ShieldCheck, ShoppingBag, Truck, UserRound,
 } from "lucide-react";
@@ -52,7 +52,7 @@ function AccountPage() {
   }, [currentView]);
   const [query, setQuery] = useState("");
   const [noticeOpen, setNoticeOpen] = useState(false);
-  const [orders, setOrders] = useState<{ id: string; order_number: string; figurine_price: number; delivery_price: number; delivery_label: string; status: string; created_at: string }[]>([]);
+  const [orders, setOrders] = useState<{ id: string; order_number: string; figurine_price: number; delivery_price: number; delivery_label: string; status: string; created_at: string; product_type: string | null; configuration: { title?: string } | null }[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [profile, setProfile] = useState<{ display_name: string; email: string } | null>(null);
   const [settings, setSettings] = useState({ newsletter: true, orderStatus: true, savedAddresses: true });
@@ -60,7 +60,7 @@ function AccountPage() {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) return;
       const { data } = await supabase.from("orders").select("*").eq("user_id", user.id).order("created_at", { ascending: false });
-      setOrders(data ?? []);
+      setOrders((data ?? []) as unknown as typeof orders);
       const { data: r } = await supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin");
       setIsAdmin(!!r?.length);
       const { data: p } = await supabase.from("profiles").select("display_name, email").eq("id", user.id).maybeSingle();
@@ -69,10 +69,34 @@ function AccountPage() {
   }, []);
   const [typeFilter, setTypeFilter] = useState<"Wszystkie" | "Figurki na zamówienie" | "Modele 3D">("Wszystkie");
   const [statusFilter, setStatusFilter] = useState<"Wszystkie" | "W realizacji" | "Wymaga działania" | "Zakończone">("Wszystkie");
-  const statusMap: Record<string, string[]> = { "W realizacji": ["W realizacji"], "Wymaga działania": ["Wymaga działania"], "Zakończone": ["Gotowe do pobrania", "Wysłane", "Zakończone"] };
-  const filtered = orders.filter(o => (!query || o.order_number.includes(query)) && (statusFilter === "Wszystkie" || statusMap[statusFilter]?.includes(o.status)));
+  const statusMap: Record<string, string[]> = { "W realizacji": ["Opłacone", "Projektowanie", "Wizualizacja", "Modelowanie", "Druk", "Malowanie", "W realizacji"], "Wymaga działania": ["Poprawki", "Wymaga działania"], "Zakończone": ["Gotowe", "Gotowe do pobrania", "Wysłane", "Zakończone"] };
+  const filtered = orders.filter(o => (!query || o.order_number.includes(query)) && (statusFilter === "Wszystkie" || statusMap[statusFilter]?.includes(o.status)) && (typeFilter === "Wszystkie" || (typeFilter === "Figurki na zamówienie" ? o.product_type !== "model_3d" : o.product_type === "model_3d")));
   const countFor = (label: string) => label === "Łączna liczba zamówień" ? orders.length : orders.filter(o => o.status === label).length;
-  const orderList = (list: typeof orders) => <ul className="mt-3 w-full divide-y divide-border text-left">{list.map(o => <li key={o.id} className="flex items-center justify-between gap-3 py-3"><span><strong className="block text-[13px]">Zamówienie {o.order_number}</strong><span className="text-[11px] text-muted-foreground">{new Date(o.created_at).toLocaleDateString("pl-PL")} · {o.delivery_label}</span></span><span className="text-right"><strong className="block text-[13px]">{(Number(o.figurine_price) + Number(o.delivery_price)).toFixed(2).replace(".", ",")} zł</strong><span className="text-[11px] text-primary">{o.status}</span></span></li>)}</ul>;
+  const statusStyle = (status: string): { label: string; className: string; icon: typeof CheckCircle2 | null } => {
+    if (status === "Wizualizacja") return { label: "Wizualizacja gotowa", className: "bg-brand-soft text-primary", icon: null };
+    if (status === "Druk") return { label: "W druku", className: "bg-warning-soft text-warning", icon: Clock3 };
+    if (status === "Wysłane") return { label: "Wysłane", className: "bg-success-soft text-success", icon: CheckCircle2 };
+    if (status === "Gotowe" || status === "Zakończone" || status === "Gotowe do pobrania") return { label: "Zakończone", className: "bg-muted text-muted-foreground", icon: Download };
+    if (status === "Poprawki" || status === "Wymaga działania") return { label: "Wymaga działania", className: "bg-warning-soft text-warning", icon: Clock3 };
+    if (status === "Anulowane") return { label: "Anulowane", className: "bg-muted text-muted-foreground", icon: null };
+    return { label: "W realizacji", className: "bg-brand-soft text-primary", icon: null };
+  };
+  const orderList = (list: typeof orders) => <ul className="mt-3 w-full space-y-3 text-left">{list.map(o => {
+    const isModel = o.product_type === "model_3d";
+    const st = statusStyle(o.status);
+    const StatusIcon = st.icon;
+    return <li key={o.id} className="flex flex-wrap items-center gap-x-5 gap-y-3 rounded-lg border border-border bg-card p-4 shadow-sm">
+      <span className="grid size-16 shrink-0 place-items-center overflow-hidden rounded-md bg-secondary"><img src={isModel ? giftBox : couple} alt="" loading="lazy" className="size-full object-contain" /></span>
+      <span className="min-w-[150px] flex-1">
+        <span className="flex flex-wrap items-center gap-2"><strong className="text-[13px] font-bold">{o.order_number}</strong><span className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${isModel ? "bg-success-soft text-success" : "bg-brand-soft text-primary"}`}>{isModel ? "Model 3D" : "Figurka 3D"}</span></span>
+        <span className="mt-1 block text-[12px] text-muted-foreground">{o.configuration?.title ?? (isModel ? "Gotowy model 3D" : "Figurka personalizowana")}</span>
+      </span>
+      <span className="text-[12px] text-muted-foreground">{new Date(o.created_at).toLocaleDateString("pl-PL")}</span>
+      <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold ${st.className}`}>{StatusIcon && <StatusIcon className="size-3.5" />}{st.label}</span>
+      <strong className="text-[14px] font-bold">{(Number(o.figurine_price) + Number(o.delivery_price)).toFixed(2).replace(".", ",")} zł</strong>
+      <Button asChild variant="outline" size="sm" className="h-9 rounded-md border-primary/40 px-4 text-[11px] font-semibold text-primary hover:bg-brand-soft hover:text-primary"><Link to="/konto/zamowienia/$orderId" params={{ orderId: o.id }}>Szczegóły <ArrowRight className="size-3.5" /></Link></Button>
+    </li>;
+  })}</ul>;
 
   return <div className="flex min-h-screen flex-col bg-background">
     <SiteHeader />
@@ -129,7 +153,7 @@ function AccountPage() {
               <div className="flex flex-wrap gap-2">{(["Wszystkie", "W realizacji", "Wymaga działania", "Zakończone"] as const).map(s => <Button key={s} type="button" size="sm" variant={statusFilter === s ? "hero" : "outline"} onClick={() => setStatusFilter(s)} className="h-8 rounded-full px-4 text-[11px] font-semibold">{s}</Button>)}</div>
             </div>
 
-            {filtered.length ? <div className="rounded-md border border-border bg-card px-5 py-2">{orderList(filtered)}</div> : <div className="flex flex-col items-center rounded-md border border-border bg-card px-5 py-10 text-center">
+            {filtered.length ? orderList(filtered) : <div className="flex flex-col items-center rounded-md border border-border bg-card px-5 py-10 text-center">
               <img src={emptyBox} alt="Otwarte puste pudełko" width={768} height={768} className="h-36 w-40 object-contain" />
               <h2 className="mt-3 text-lg font-extrabold">Nie masz jeszcze żadnych zamówień</h2>
               <p className="mt-2 max-w-md text-[12px] leading-5 text-muted-foreground">{query ? `Nie znaleziono zamówień dla „${query}”.` : "Gdy złożysz zamówienie na personalizowaną figurkę 3D lub kupisz gotowy model 3D, pojawi się ono tutaj. Możesz od razu przejść do konfiguratora i stworzyć coś wyjątkowego!"}</p>
