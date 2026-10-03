@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
-import { ArrowRight, Check, CircleCheck, Clock3, Gift, Images, Mail, MessageSquareText, PackageCheck, Paintbrush, Phone, ShieldCheck, Truck, UserRound, UsersRound } from "lucide-react";
+import { ArrowRight, CircleCheck, Clock3, Gift, Images, Mail, MessageSquareText, PackageCheck, Paintbrush, Phone, ShieldCheck, Truck, UserRound, UsersRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -82,7 +82,6 @@ function OrderPage() {
   const money = (amount: number) => `${amount.toFixed(2).replace(".", ",")} zł`;
   const isTwoPartName = (value: string) => value.trim().split(/\s+/).filter(Boolean).length >= 2;
   const nameError = "Wpisz imię i nazwisko (co najmniej dwa słowa).";
-  const contactComplete = isTwoPartName(contact.fullName) && Boolean(contact.email.trim() && contact.phone.trim());
   const clearError = (name: string, value: string) => {
     if (!value.trim() || !errors[name]) return;
     setErrors((prev) => { const next = { ...prev }; delete next[name]; return next; });

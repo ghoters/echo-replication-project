@@ -248,16 +248,6 @@
 .order-intro .order-eyebrow { margin: 0; color: var(--primary); text-transform: uppercase; font-size: 12px; line-height: 16px; font-weight: 800; letter-spacing: .025em; }
 .order-intro h1 { margin-top: 8px; color: var(--foreground); font-size: 32px; line-height: 1.25; font-weight: 800; }
 .order-intro > p:last-child { margin-top: 12px; font-size: 14px; line-height: 20px; color: var(--muted-foreground); }
-.order-progress { width: min(100%, 1300px); display: flex; align-items: center; gap: 8px; margin: 20px auto; padding-bottom: 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
-.order-progress-step { display: flex; align-items: center; gap: 9px; flex: 1; min-width: 0; font-size: 11px; font-weight: 600; }
-.order-progress-step > span:nth-child(2) { overflow: hidden; text-overflow: ellipsis; }
-.order-progress-step.is-current { color: var(--order-blue); font-weight: 800; }
-.order-progress-step i { flex: 1; height: 1px; min-width: 8px; background: var(--order-outline); }
-.order-progress-circle { flex: none; width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 50%; background: var(--card); color: var(--foreground); font-size: 11px; font-weight: 700; }
-.order-progress-circle svg { width: 13px; height: 13px; }
-.order-progress-step:first-child .order-progress-circle, .order-progress-step.is-current .order-progress-circle { background: var(--order-blue); border-color: var(--order-blue); color: var(--primary-foreground); }
-.order-progress-step.is-done { color: var(--primary); font-weight: 800; }
-.order-progress-step.is-done .order-progress-circle { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
 .order-grid { display: grid; width: min(100%, 1300px); margin-inline: auto; grid-template-columns: minmax(0, 1.55fr) minmax(380px, 1fr); align-items: start; gap: 20px; }
 @media (min-width: 1024px) {
   .order-layout { padding-top: 36px; }
