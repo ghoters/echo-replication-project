@@ -97,6 +97,28 @@ function AccountPage() {
       <Button asChild variant="outline" size="sm" className="h-9 rounded-md border-primary/40 px-4 text-[11px] font-semibold text-primary hover:bg-brand-soft hover:text-primary"><Link to="/konto/zamowienia/$orderId" params={{ orderId: o.id }}>Szczegóły <ArrowRight className="size-3.5" /></Link></Button>
     </li>;
   })}</ul>;
+  const dashboardOrderList = (list: typeof orders) => <div className="mt-3 overflow-hidden rounded-md border border-border bg-card">
+    <div className="hidden grid-cols-[78px_68px_minmax(120px,1fr)_70px_116px_68px_66px] items-center gap-2 border-b border-border bg-background/40 px-3 py-2 text-[9px] font-semibold text-muted-foreground lg:grid">
+      <span>Nr zamówienia</span><span>Typ</span><span>Produkt</span><span>Data</span><span>Status</span><span>Cena</span><span>Akcje</span>
+    </div>
+    <ul className="divide-y divide-border">{list.map(o => {
+      const isModel = o.product_type === "model_3d";
+      const st = statusStyle(o.status);
+      const StatusIcon = st.icon;
+      return <li key={o.id} className="grid gap-3 px-3 py-2.5 text-left lg:grid-cols-[78px_68px_minmax(120px,1fr)_70px_116px_68px_66px] lg:items-center lg:gap-2">
+        <strong className="text-[11px] font-extrabold">{o.order_number}</strong>
+        <span className={`w-fit rounded-md px-2.5 py-1 text-[10px] font-semibold ${isModel ? "bg-success-soft text-success" : "bg-brand-soft text-primary"}`}>{isModel ? "Model 3D" : "Figurka 3D"}</span>
+        <span className="flex min-w-0 items-center gap-3">
+          <span className="grid size-10 shrink-0 place-items-center overflow-hidden rounded-sm bg-secondary"><img src={isModel ? giftBox : couple} alt="" loading="lazy" className="size-full object-contain" /></span>
+          <span className="truncate text-[11px] font-semibold">{o.configuration?.title ?? (isModel ? "Gotowy model 3D" : "Figurka personalizowana")}</span>
+        </span>
+        <span className="text-[10px] text-muted-foreground">{new Date(o.created_at).toLocaleDateString("pl-PL")}</span>
+        <span className={`inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-semibold ${st.className}`}>{StatusIcon && <StatusIcon className="size-3" />}{st.label}</span>
+        <strong className="text-[11px] font-extrabold">{(Number(o.figurine_price) + Number(o.delivery_price)).toFixed(2).replace(".", ",")} zł</strong>
+        <Button asChild variant="outline" size="sm" className="h-8 w-fit rounded-md border-primary/40 px-3 text-[10px] font-semibold text-primary hover:bg-brand-soft hover:text-primary"><Link to="/konto/zamowienia/$orderId" params={{ orderId: o.id }}>Zobacz <ArrowRight className="size-3" /></Link></Button>
+      </li>;
+    })}</ul>
+  </div>;
 
   return <div className="flex min-h-screen flex-col bg-background">
     <SiteHeader />
@@ -136,8 +158,8 @@ function AccountPage() {
               ].map(({ label, icon: Icon, color, bg }) => <Button key={label} type="button" variant="ghost" onClick={() => setView("orders")} className="h-auto min-h-[98px] min-w-0 justify-start gap-2 rounded-md border border-border bg-card px-2 py-3 text-left shadow-sm hover:bg-card sm:gap-3 sm:px-4"><span className={`grid size-9 shrink-0 place-items-center rounded-full sm:size-11 ${bg} ${color}`}><Icon className="size-5" /></span><span className="min-w-0 flex-1 whitespace-normal"><span className="block break-words text-[10px] leading-4 font-semibold">{label}</span><strong className="block text-base leading-6">{countFor(label)}</strong><span className="block text-[10px] leading-4 font-normal text-muted-foreground">{countFor(label) ? "Zamówienia" : "Brak zamówień"}</span></span><ChevronRight className="hidden size-3 shrink-0 text-primary sm:block" /></Button>)}
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
-              <section className="flex min-h-[295px] flex-col rounded-md border border-border bg-card p-4 shadow-sm"><div className="flex items-center justify-between gap-3"><h2 className="text-sm font-extrabold">Twoje zamówienia</h2><Button type="button" variant="link" onClick={() => setView("orders")} className="h-auto p-0 text-[11px]">Zobacz wszystkie <ArrowRight className="size-3" /></Button></div>{orders.length ? orderList(orders.slice(0, 4)) : <div className="flex flex-1 flex-col items-center justify-center py-3 text-center"><img src={emptyBox} alt="Otwarte puste pudełko" loading="lazy" width={768} height={768} className="h-[110px] w-[150px] object-contain" /><h3 className="mt-1 text-[15px] font-bold">Brak zamówień</h3><p className="mt-1 text-[11px] leading-5 text-muted-foreground">Na razie nie masz jeszcze żadnych zamówień.<br />Rozpocznij od stworzenia własnej figurki 3D lub wybierz gotowy model ze sklepu.</p><Button asChild variant="hero" size="sm" className="mt-3 px-6"><Link to="/oferta">Przejdź do oferty <ArrowRight /></Link></Button></div>}</section>
+            <div className="grid gap-4 lg:grid-cols-[2.1fr_1fr]">
+              <section className="flex min-h-[295px] flex-col rounded-md border border-border bg-card p-4 shadow-sm"><div className="flex items-center justify-between gap-3"><h2 className="text-sm font-extrabold">Ostatnie zamówienia</h2><Button type="button" variant="link" onClick={() => setView("orders")} className="h-auto p-0 text-[11px]">Zobacz wszystkie <ArrowRight className="size-3" /></Button></div>{orders.length ? dashboardOrderList(orders.slice(0, 3)) : <div className="flex flex-1 flex-col items-center justify-center py-3 text-center"><img src={emptyBox} alt="Otwarte puste pudełko" loading="lazy" width={768} height={768} className="h-[110px] w-[150px] object-contain" /><h3 className="mt-1 text-[15px] font-bold">Brak zamówień</h3><p className="mt-1 text-[11px] leading-5 text-muted-foreground">Na razie nie masz jeszcze żadnych zamówień.<br />Rozpocznij od stworzenia własnej figurki 3D lub wybierz gotowy model ze sklepu.</p><Button asChild variant="hero" size="sm" className="mt-3 px-6"><Link to="/oferta">Przejdź do oferty <ArrowRight /></Link></Button></div>}</section>
               <section className="flex min-h-[295px] flex-col rounded-md border border-border bg-card p-4 shadow-sm"><h2 className="text-sm font-extrabold">Ostatnia aktywność</h2><div className="flex flex-1 items-center justify-center text-center text-[11px] text-muted-foreground">Brak ostatniej aktywności.</div><Link to="/oferta" className="flex items-center gap-3 rounded-md border border-border bg-secondary/50 p-3 text-[11px] leading-5 hover:border-primary/40"><span className="grid size-11 shrink-0 place-items-center rounded-full bg-secondary text-primary"><Lightbulb className="size-5" /></span><span className="flex-1">Brak zamówień w świetnym momencie,<br />aby stworzyć swoją pierwszą figurkę!</span><ChevronRight className="size-4 text-primary" /></Link></section>
             </div>
 
