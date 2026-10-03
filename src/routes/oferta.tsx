@@ -896,43 +896,47 @@ function OfferPage() {
                   <h3 className="text-sm font-bold">Treść graweru</h3>
                   <p className="mt-0.5 text-xs text-muted-foreground">Wpisz imię, datę lub napis, który umieścimy na podstawce.</p>
                   {!graverCommitted ? (
+                    <>
                     <div className="mt-3 flex gap-2">
                       <div className="relative min-w-0 flex-1">
                         <input
                           ref={graverInputRef}
                           autoFocus
                           value={graverText}
-                          onChange={(e) => { setGraverText(e.target.value); setGraverCommitted(false); }}
+                          onChange={(e) => { setGraverText(e.target.value); setGraverCommitted(false); setGraverError(false); }}
+                          onFocus={() => { cancelGraverReset(); setGraverError(false); }}
                           onKeyDown={(e) => {
-                            if (e.key === "Enter" && graverText.trim()) { cancelGraverReset(); setGraverCommitted(true); }
-                            else if (e.key === "Escape") { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); setBase("standard"); }
+                            if (e.key === "Enter" && graverText.trim()) { cancelGraverReset(); setGraverError(false); setGraverCommitted(true); }
+                            else if (e.key === "Escape") { cancelGraverReset(); setGraverError(false); setGraverText(""); setGraverCommitted(false); setBase("standard"); }
                           }}
                           onBlur={() => {
                             if (graverCommitted) return;
-                            // Clicking away with a real engraving text keeps it instead of
-                            // dropping back to Standardowa; only an empty field falls back.
+                            // Clicking away with a real engraving text keeps it; an empty field
+                            // stays on Personalizowana and only reports the missing text.
                             if (graverText.trim()) { setGraverCommitted(true); return; }
                             scheduleGraverReset();
                           }}
                           placeholder="Wpisz grawer, np. Na urodziny"
-                          className={`h-9 w-full rounded-md border pl-3 text-xs outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring ${graverText.trim() ? "border-primary bg-primary/10 text-primary font-medium" : "border-input bg-card"} ${graverText.length > 0 ? "pr-8" : "pr-3"}`}
+                          className={`h-9 w-full rounded-md border pl-3 text-xs outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring ${graverText.trim() ? "border-primary bg-primary/10 text-primary font-medium" : graverError ? "border-destructive bg-card" : "border-input bg-card"} ${graverText.length > 0 ? "pr-8" : "pr-3"}`}
                         />
                         {graverText.length > 0 && (
                           <button
                             type="button"
                             aria-label="Wyczyść grawer"
                             onMouseDown={(e) => e.preventDefault()}
-                            onClick={() => { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); graverInputRef.current?.focus(); }}
+                            onClick={() => { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); setGraverError(false); graverInputRef.current?.focus(); }}
                             className="absolute right-1.5 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                           >
                             <X className="size-3.5" />
                           </button>
                         )}
                       </div>
-                      <Button type="button" size="sm" disabled={!graverText.trim()} onMouseDown={(e) => e.preventDefault()} onClick={() => { if (graverText.trim()) setGraverCommitted(true); }}>
+                      <Button type="button" size="sm" disabled={!graverText.trim()} onMouseDown={(e) => e.preventDefault()} onClick={() => { if (graverText.trim()) { setGraverError(false); setGraverCommitted(true); } }}>
                         Zatwierdź
                       </Button>
                     </div>
+                    {graverError && <p role="alert" className="mt-2 text-xs text-destructive">Uzupełnij treść graweru.</p>}
+                    </>
                   ) : (
                     <button
                       type="button"
