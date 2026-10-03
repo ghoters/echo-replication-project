@@ -282,7 +282,7 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
       )}
       {recommended && <RecommendedBadge className={recommendedClasses} />}
       {imageSide === "left" && slot}
-      <div className={`relative flex min-w-0 flex-1 flex-col items-start ${imageContain ? "max-w-[76%] pr-0" : priceCentered ? "pr-0" : "pr-5"} ${absEditor ? (recommended && imageSide === "right" ? "pt-[10px] pb-[44px]" : "pt-1 pb-[44px]") : recommended && imageSide === "right" ? "pb-1 pt-[10px]" : "py-1"}`}>
+      <div className={`relative flex min-w-0 flex-1 flex-col items-start ${imageContain ? "max-w-[76%] pr-0" : priceCentered ? "pr-0" : "pr-5"} ${absEditor ? (recommended && imageSide === "right" ? "pt-[10px] pb-[64px]" : "pt-1 pb-[64px]") : recommended && imageSide === "right" ? "pb-1 pt-[10px]" : "py-1"}`}>
         <div className="flex items-start gap-2 text-sm font-extrabold leading-tight">{Icon && <Icon className="size-4 shrink-0 text-primary" />}<span className={titleNowrap ? "whitespace-nowrap" : "whitespace-pre-line"}>{title}</span></div>
         <p className={`${matchBadgePadding ? "mt-[14px]" : "mt-2"} text-xs font-normal leading-5 text-muted-foreground`}>{text}</p>
         {textInput ? (
@@ -333,7 +333,12 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
       </div>
       {imageSide === "right" && slot}
       {absEditor && (
-        <div className="absolute inset-x-3.5 bottom-[18px] z-10 flex flex-col">{textInputEditor}</div>
+        <div className="absolute inset-x-3.5 bottom-[18px] z-10 flex flex-col">
+          {textInputEditor}
+          {textInput?.error && (
+            <p role="alert" className="mt-1 text-xs text-destructive">Uzupełnij opis własnego elementu.</p>
+          )}
+        </div>
       )}
       <span className={`absolute right-3 top-3 size-4 rounded-full border ${selected ? "border-primary bg-primary ring-2 ring-card" : "border-border bg-card"}`} />
     </div>
@@ -738,13 +743,6 @@ function OfferPage() {
                   />
                 ))}
               </div>
-              {customError && subjects.includes("custom") && (
-                <div className="mt-2 grid gap-3.5 md:grid-cols-3">
-                  <span aria-hidden="true" />
-                  <span aria-hidden="true" />
-                  <p role="alert" className="text-xs text-destructive">Uzupełnij opis własnego elementu.</p>
-                </div>
-              )}
             </section>
 
             <section className={`border-t border-border p-5 transition-all duration-300 ${readySteps[1] ? "bg-card" : "bg-muted/40 opacity-60 saturate-50 pointer-events-none select-none"}`}>
