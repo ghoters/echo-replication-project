@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
-import { ArrowRight, Check, CircleCheck, Clock3, Gift, Images, Mail, MessageSquareText, PackageCheck, Paintbrush, Phone, ShieldCheck, Truck, UserRound, UsersRound } from "lucide-react";
+import { ArrowRight, CircleCheck, Clock3, Gift, Images, Mail, MessageSquareText, PackageCheck, Paintbrush, Phone, ShieldCheck, Truck, UserRound, UsersRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -82,7 +82,6 @@ function OrderPage() {
   const money = (amount: number) => `${amount.toFixed(2).replace(".", ",")} zł`;
   const isTwoPartName = (value: string) => value.trim().split(/\s+/).filter(Boolean).length >= 2;
   const nameError = "Wpisz imię i nazwisko (co najmniej dwa słowa).";
-  const contactComplete = isTwoPartName(contact.fullName) && Boolean(contact.email.trim() && contact.phone.trim());
   const clearError = (name: string, value: string) => {
     if (!value.trim() || !errors[name]) return;
     setErrors((prev) => { const next = { ...prev }; delete next[name]; return next; });
@@ -148,7 +147,6 @@ function OrderPage() {
 
   return <><SiteHeader variant="checkout" /><main className="order-page"><div className="order-layout">
     <header className="order-intro"><p className="order-eyebrow">Dane i zamówienie</p><h1>Skończ konfigurację. Złóż zamówienie!</h1><p>Uzupełnij swoje dane, wybierz sposób dostawy i sprawdź podsumowanie zamówienia.<br className="order-desktop-break" /> Po zatwierdzeniu przejdziesz do płatności, a my zajmiemy się resztą!</p></header>
-    <div className="order-progress" aria-label="Postęp zamówienia">{["Konfiguracja", "Dane i dostawa", "Płatność", "Potwierdzenie"].map((step, index) => <div key={step} className={`order-progress-step ${index === 1 ? "is-current" : ""} ${index === 0 || (index === 1 && contactComplete) ? "is-done" : ""}`}><span className="order-progress-circle">{index === 0 || (index === 1 && contactComplete) ? <Check aria-hidden="true" /> : index + 1}</span><span>{step}</span><i /></div>)}</div>
     <form className="order-grid" onSubmit={submit} noValidate>
       <div className="order-form-column">
         <section className="order-panel"><SectionTitle number={1} icon={UserRound} title="Dane kontaktowe" subtitle="Podaj swoje dane, abyśmy mogli skontaktować się z Tobą w sprawie zamówienia." />

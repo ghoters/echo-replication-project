@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowRight, Building2, CalendarCheck2, Check, ChevronRight, CreditCard, ShieldCheck } from "lucide-react";
+import { ArrowRight, Building2, CalendarCheck2, ChevronRight, CreditCard, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -54,7 +54,6 @@ function PaymentPage() {
 
   return <><SiteHeader variant="checkout" /><main className="payment-page"><div className="payment-layout">
     <header className="payment-intro"><h1>Płatność</h1><p>Wybierz dogodną metodę płatności i sfinalizuj zamówienie.</p></header>
-    <div className="order-progress" aria-label="Postęp zamówienia">{["Konfiguracja", "Dane i dostawa", "Płatność", "Potwierdzenie"].map((step, index) => <div key={step} className={`order-progress-step ${index === 2 ? "is-current" : ""} ${index < 2 ? "is-done" : ""}`}><span className="order-progress-circle">{index < 2 ? <Check aria-hidden="true" /> : index + 1}</span><span>{step}</span><i /></div>)}</div>
     <div className="payment-grid">
       <div className="payment-left">
         <section className="payment-card payment-amount"><div><h2>Kwota do zapłaty</h2><strong>{money(total)}</strong></div><span><ShieldCheck aria-hidden="true" /> Bezpieczna płatność</span></section>
