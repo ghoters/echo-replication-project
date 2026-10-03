@@ -63,7 +63,6 @@ export const Route = createFileRoute("/oferta")({
 type IconType = ComponentType<{ className?: string }>;
 type ImageSide = "left" | "right";
 
-const progressSteps = ["Liczba osób / zwierząt", "Rozmiar", "Wykończenie", "Podstawka", "Dodatki", "Zdjęcia i zamówienie"];
 
 // Ceny bazowe — zmiana tych wartości aktualizuje całą mechanikę cenową.
 const BASE_PERSON_PRICE = 180;
