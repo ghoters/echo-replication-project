@@ -48,9 +48,9 @@ const categories: Category[] = [
       { question: "Czy mogę zamówić figurkę samego zwierzęcia, lub kilka zwierząt np. psa/kota?", answer: "Tak. Jeśli zamawiasz figurkę z jednym zwierzakiem, w kroku „Kogo ma przedstawiać figurka?” pozostaw zaznaczoną opcję „Osoba” (traktujemy ją jako postać bazową). Każde dodatkowe zwierzę dodasz opcją „Zwierzę”." },
       { question: "Ile zdjęć potrzebujecie?", answer: "Wystarczy 1 wyraźne zdjęcie, ale zalecamy przesłanie kilku ujęć. Pozwoli nam to precyzyjnie uchwycić rysy twarzy, sylwetkę\ni charakterystyczne szczegóły." },
       { question: "Ile osób może być na jednej figurce?", answer: "W konfiguratorze można dodać do 6 osób i 6 zwierząt. Przy większych zamówieniach wyceniamy indywidualnie." },
-      { question: "Nie znalazłem opcji w konfiguratorze – co zrobić?", answer: "Skontaktuj się z nami mailowo (prezent3d@gmail.com) lub opisz swój pomysł w uwagach do zamówienia." },
-      { question: "Czy mogę dodać coś, czego nie ma w konfiguratorze?", answer: "Tak. W konfiguratorze możesz skorzystać z opcji „Dodaj własny element” albo opisać nietypowy pomysł w uwagach do zamówienia lub mailowo (prezent3d@gmail.com)." },
-      { question: "Czy mogę zamówić więcej niż jedną figurkę?", answer: "Tak. Jeśli chcesz zamówić kilka kopii tego samego projektu (np. jako prezent dla kilku osób) lub zupełnie różne figurki, podaj taką informację w uwagach do zamówienia albo napisz do nas na prezent3d@gmail.com – przygotujemy indywidualną wycenę" },
+      { question: "Nie znalazłem opcji w konfiguratorze – co zrobić?", answer: "Skontaktuj się z nami mailowo (kontakt@prezent3d.com) lub opisz swój pomysł w uwagach do zamówienia." },
+      { question: "Czy mogę dodać coś, czego nie ma w konfiguratorze?", answer: "Tak. W konfiguratorze możesz skorzystać z opcji „Dodaj własny element” albo opisać nietypowy pomysł w uwagach do zamówienia lub mailowo (kontakt@prezent3d.com)." },
+      { question: "Czy mogę zamówić więcej niż jedną figurkę?", answer: "Tak. Jeśli chcesz zamówić kilka kopii tego samego projektu (np. jako prezent dla kilku osób) lub zupełnie różne figurki, podaj taką informację w uwagach do zamówienia albo napisz do nas na kontakt@prezent3d.com – przygotujemy indywidualną wycenę" },
       { question: "Czy mogę wybrać pozę lub ubiór?", answer: "Tak. Opisz oczekiwaną pozę i ubiór w uwagach oraz dołącz zdjęcia referencyjne. Uwzględnimy je podczas przygotowania projektu." },
       { question: "Czy mogę zamówić kilka identycznych figurek?", answer: "Tak. W wiadomości do zamówienia podaj potrzebną liczbę egzemplarzy, a potwierdzimy cenę i termin realizacji." },
     ],
@@ -213,7 +213,7 @@ function FaqPage() {
               <div>
                 <h2 className="text-[14px] font-extrabold">Nie znalazłeś odpowiedzi na swoje pytanie?</h2>
                 <p className="mt-2 max-w-[390px] text-[10px] leading-5 text-muted-foreground">Masz nietypowe pytanie dotyczące swojej figurki? Skontaktuj się z nami – chętnie pomożemy i odpowiemy na wszystkie wątpliwości.</p>
-                <Button variant="hero" size="sm" asChild className="mt-4"><a href="mailto:prezent3d@gmail.com">Skontaktuj się z nami <ArrowRight /></a></Button>
+                <Button variant="hero" size="sm" asChild className="mt-4"><a href="mailto:kontakt@prezent3d.com">Skontaktuj się z nami <ArrowRight /></a></Button>
               </div>
             </div>
             <div className="flex gap-5 border-t border-primary/20 px-6 py-7 sm:px-10 lg:border-t-0 lg:border-l">
