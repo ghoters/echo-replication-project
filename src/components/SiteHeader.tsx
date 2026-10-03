@@ -81,7 +81,7 @@ export function SiteHeader({ active = "", variant = "full" }: { active?: "home" 
         </Link>
         <nav className="hidden items-center justify-center gap-6 text-[12px] font-semibold text-foreground lg:flex" aria-label="Główna nawigacja">
           <Link to="/" className={active === "home" ? "border-b-2 border-primary py-6 text-primary" : navLinkHover}>Strona główna</Link>
-          <Link to="/oferta" className={active === "offer" ? "border-b-2 border-primary py-6 text-primary" : navLinkHover}>Stwórz swoją figurkę⌄</Link>
+          <Link to="/oferta" className={active === "offer" ? "border-b-2 border-primary py-6 text-primary" : navLinkHover}>Stwórz swoją figurkę</Link>
           <Link to="/sklep" className={active === "sklep" ? "border-b-2 border-primary py-6 text-primary" : navLinkHover}>Sklep</Link>
           <Link to="/kontakt" className={active === "kontakt" ? "border-b-2 border-primary py-6 text-primary" : navLinkHover}>Kontakt</Link>
           <Link to="/faq" className={active === "faq" ? "border-b-2 border-primary py-6 text-primary" : navLinkHover}>FAQ</Link>
