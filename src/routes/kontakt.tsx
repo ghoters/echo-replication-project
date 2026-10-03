@@ -32,7 +32,7 @@ export const Route = createFileRoute("/kontakt")({
   component: KontaktPage,
 });
 
-const CONTACT_EMAIL = "prezent3d@gmail.com";
+const CONTACT_EMAIL = "kontakt@prezent3d.com";
 
 const subjects = ["Pytanie o zamówienie", "Wycena projektu", "Poprawki do projektu", "Współpraca", "Inne"];
 
@@ -150,7 +150,7 @@ function KontaktPage() {
           <CircleHelp className="size-5 shrink-0 text-primary" />
           <p className="text-[11px] leading-5 text-foreground">
             Nie znalazłeś odpowiedzi? Napisz na{" "}
-            <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-primary transition-colors hover:underline">prezent3d@gmail.com</a>
+            <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-primary transition-colors hover:underline">kontakt@prezent3d.com</a>
             {" "}- odpowiadamy w ciągu 24 godzin.
           </p>
         </div>
