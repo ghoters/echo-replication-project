@@ -496,6 +496,7 @@ function OfferPage() {
   const [graverText, setGraverText] = useState("");
   const graverInputRef = useRef<HTMLInputElement>(null);
   const [graverCommitted, setGraverCommitted] = useState(false);
+  const [graverError, setGraverError] = useState(false);
   const [size, setSize] = useState<string | null>(null);
   const [finish, setFinish] = useState<string | null>(null);
   const [base, setBase] = useState<string | null>(null);
@@ -514,11 +515,12 @@ function OfferPage() {
   const colorResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cancelColorReset = () => { if (colorResetTimer.current) { clearTimeout(colorResetTimer.current); colorResetTimer.current = null; } };
   const scheduleColorReset = () => { cancelColorReset(); colorResetTimer.current = setTimeout(() => { colorResetTimer.current = null; setColorText(""); setColorCommitted(false); setColor("white"); }, 120); };
-  // Same delayed reset for the engraving text: blur with nothing committed falls back
-  // to the recommended base instead of leaving Personalizowana half-chosen.
+  // Same delayed timer for the engraving text: blur with nothing committed keeps
+  // Personalizowana selected and only flags the missing text after a short grace
+  // period, so clicking Zatwierdź or another base card cancels it first.
   const graverResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cancelGraverReset = () => { if (graverResetTimer.current) { clearTimeout(graverResetTimer.current); graverResetTimer.current = null; } };
-  const scheduleGraverReset = () => { cancelGraverReset(); graverResetTimer.current = setTimeout(() => { graverResetTimer.current = null; setGraverText(""); setGraverCommitted(false); setBase("standard"); }, 120); };
+  const scheduleGraverReset = () => { cancelGraverReset(); graverResetTimer.current = setTimeout(() => { graverResetTimer.current = null; setGraverError(true); }, 120); };
   const colorLabel = color === "white" ? "Biały" : color === "beige" ? "Beżowy" : colorCommitted && colorText.trim() ? `Inny: ${colorText.trim()}` : "Inny";
   const finishLabel = finish === "single" ? `Figurka jednokolorowa (${colorLabel})` : undefined;
 
@@ -569,7 +571,7 @@ function OfferPage() {
   const clearFinish = () => { setFinish(null); setBase(null); setPack(null); };
   // Removing the base choice leaves the step empty (no fallback to Standardowa) and
   // deletes the engraving text, so re-selecting Personalizowana starts from a clean field.
-  const clearBase = () => { cancelGraverReset(); setBase(null); setPack(null); };
+  const clearBase = () => { cancelGraverReset(); setGraverError(false); setBase(null); setPack(null); };
   const clearPack = () => { setPack(null); };
 
   const hasSelection = Boolean(size || finish || base || pack) || personCount > 1 || animalCount > 0 || subjects.includes("custom") || photoCount > 0;
@@ -881,7 +883,7 @@ function OfferPage() {
                       selected={base === item.id}
                       recommendedTone={item.id === "standard" ? baseRecommendedTone : undefined}
                       onClick={() => {
-                        if (base !== item.id) { cancelGraverReset(); setBase(item.id); return; }
+                        if (base !== item.id) { cancelGraverReset(); setGraverError(false); setBase(item.id); return; }
                         if (lastFilledStep !== 3) return;
                         clearBase();
                       }}
@@ -894,43 +896,47 @@ function OfferPage() {
                   <h3 className="text-sm font-bold">Treść graweru</h3>
                   <p className="mt-0.5 text-xs text-muted-foreground">Wpisz imię, datę lub napis, który umieścimy na podstawce.</p>
                   {!graverCommitted ? (
+                    <>
                     <div className="mt-3 flex gap-2">
                       <div className="relative min-w-0 flex-1">
                         <input
                           ref={graverInputRef}
                           autoFocus
                           value={graverText}
-                          onChange={(e) => { setGraverText(e.target.value); setGraverCommitted(false); }}
+                          onChange={(e) => { setGraverText(e.target.value); setGraverCommitted(false); setGraverError(false); }}
+                          onFocus={() => { cancelGraverReset(); setGraverError(false); }}
                           onKeyDown={(e) => {
-                            if (e.key === "Enter" && graverText.trim()) { cancelGraverReset(); setGraverCommitted(true); }
-                            else if (e.key === "Escape") { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); setBase("standard"); }
+                            if (e.key === "Enter" && graverText.trim()) { cancelGraverReset(); setGraverError(false); setGraverCommitted(true); }
+                            else if (e.key === "Escape") { cancelGraverReset(); setGraverError(false); setGraverText(""); setGraverCommitted(false); setBase("standard"); }
                           }}
                           onBlur={() => {
                             if (graverCommitted) return;
-                            // Clicking away with a real engraving text keeps it instead of
-                            // dropping back to Standardowa; only an empty field falls back.
+                            // Clicking away with a real engraving text keeps it; an empty field
+                            // stays on Personalizowana and only reports the missing text.
                             if (graverText.trim()) { setGraverCommitted(true); return; }
                             scheduleGraverReset();
                           }}
                           placeholder="Wpisz grawer, np. Na urodziny"
-                          className={`h-9 w-full rounded-md border pl-3 text-xs outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring ${graverText.trim() ? "border-primary bg-primary/10 text-primary font-medium" : "border-input bg-card"} ${graverText.length > 0 ? "pr-8" : "pr-3"}`}
+                          className={`h-9 w-full rounded-md border pl-3 text-xs outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring ${graverText.trim() ? "border-primary bg-primary/10 text-primary font-medium" : graverError ? "border-destructive bg-card" : "border-input bg-card"} ${graverText.length > 0 ? "pr-8" : "pr-3"}`}
                         />
                         {graverText.length > 0 && (
                           <button
                             type="button"
                             aria-label="Wyczyść grawer"
                             onMouseDown={(e) => e.preventDefault()}
-                            onClick={() => { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); graverInputRef.current?.focus(); }}
+                            onClick={() => { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); setGraverError(false); graverInputRef.current?.focus(); }}
                             className="absolute right-1.5 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                           >
                             <X className="size-3.5" />
                           </button>
                         )}
                       </div>
-                      <Button type="button" size="sm" disabled={!graverText.trim()} onMouseDown={(e) => e.preventDefault()} onClick={() => { if (graverText.trim()) setGraverCommitted(true); }}>
+                      <Button type="button" size="sm" disabled={!graverText.trim()} onMouseDown={(e) => e.preventDefault()} onClick={() => { if (graverText.trim()) { setGraverError(false); setGraverCommitted(true); } }}>
                         Zatwierdź
                       </Button>
                     </div>
+                    {graverError && <p role="alert" className="mt-2 text-xs text-destructive">Uzupełnij treść graweru.</p>}
+                    </>
                   ) : (
                     <button
                       type="button"
@@ -1050,7 +1056,7 @@ function OfferPage() {
             <p className="mt-3 flex items-center gap-2 text-xs font-semibold text-primary"><Package className="size-4" /> Darmowa wysyłka od 299 zł</p>
             <Button
               type="button"
-              disabled={!photosReady || photoBusy || !activeSteps.every(Boolean)}
+              disabled={!photosReady || photoBusy || !activeSteps.every(Boolean) || (base === "personalized" && !graverText.trim())}
               className="mt-3 h-12 w-full text-sm"
               onClick={() => {
                 saveFigurineConfig({ subjects, personCount, animalCount, customText, customCommitted, size, finish, base, pack, photoCount, color, colorText, colorCommitted, graverText, graverCommitted: graverCommitted || !!graverText.trim() });
