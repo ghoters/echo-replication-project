@@ -742,7 +742,7 @@ function OfferPage() {
                 <div className="mt-2 grid gap-3.5 md:grid-cols-3">
                   <span aria-hidden="true" />
                   <span aria-hidden="true" />
-                  <p role="alert" className="text-xs text-destructive">Uzupełnij opis własnego elementu.</p>
+                  <p role="alert" className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">Uzupełnij opis własnego elementu.</p>
                 </div>
               )}
             </section>
