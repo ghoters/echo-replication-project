@@ -23,9 +23,9 @@ export function SiteFooter() {
           <Link to="/faq">FAQ</Link>
         </nav>
         <div className="flex flex-col gap-3 md:justify-self-end">
-          <a href="mailto:prezent3d@gmail.com" className="flex items-center gap-2 text-[10px] font-semibold">
+          <a href="mailto:kontakt@prezent3d.com" className="flex items-center gap-2 text-[10px] font-semibold">
             <Mail className="size-4 text-primary" />
-            prezent3d@gmail.com
+            kontakt@prezent3d.com
           </a>
           <a href="https://instagram.com/prezent3D.com" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-[10px] font-semibold">
             <Instagram className="size-4 text-primary" />
