@@ -335,7 +335,7 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
       {absEditor && (
         <div className="absolute inset-x-3.5 bottom-[18px] z-10 flex flex-col">
           {textInputEditor}
-          {textInput.error && (
+          {textInput?.error && (
             <p role="alert" className="mt-1 text-xs text-destructive">Uzupełnij opis własnego elementu.</p>
           )}
         </div>
@@ -724,7 +724,7 @@ function OfferPage() {
                             }
                           : undefined
                     }
-                    onClick={() => { console.log("CLICK", item.id); setSubjects((current) => {
+                    onClick={() => setSubjects((current) => {
                       if (item.id === "person") return current.includes("person") ? current : [...current, "person"];
                       if (item.id === "animal") {
                         if (animalCount === 0) { setAnimalCount(1); return current.includes("animal") ? current : [...current, "animal"]; }
