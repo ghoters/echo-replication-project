@@ -336,7 +336,7 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
         <div className="absolute inset-x-3.5 bottom-[18px] z-10 flex flex-col">
           {textInputEditor}
           {textInput?.error && (
-            <p role="alert" className="mt-1 text-xs text-destructive">Uzupełnij opis własnego elementu.</p>
+            <p role="alert" className="pointer-events-none absolute left-0 top-full mt-[2px] whitespace-nowrap text-[11px] leading-[14px] text-destructive">Uzupełnij opis własnego elementu.</p>
           )}
         </div>
       )}
