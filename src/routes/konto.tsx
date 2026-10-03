@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  ArrowRight, Bell, Box, Camera, CheckCircle2, ChevronRight, Clock3, CreditCard,
+  ArrowRight, Bell, Box, Camera, CheckCircle2, ChevronRight, Clock3, CreditCard, Download,
   FileText, Lightbulb, LogOut, Mail, MapPin, MoreVertical, Package, Paintbrush,
   Pencil, Phone, Plus, Search, ShieldCheck, ShoppingBag, Truck, UserRound,
 } from "lucide-react";
@@ -52,7 +52,7 @@ function AccountPage() {
   }, [currentView]);
   const [query, setQuery] = useState("");
   const [noticeOpen, setNoticeOpen] = useState(false);
-  const [orders, setOrders] = useState<{ id: string; order_number: string; figurine_price: number; delivery_price: number; delivery_label: string; status: string; created_at: string }[]>([]);
+  const [orders, setOrders] = useState<{ id: string; order_number: string; figurine_price: number; delivery_price: number; delivery_label: string; status: string; created_at: string; product_type: string | null; configuration: { title?: string } | null }[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [profile, setProfile] = useState<{ display_name: string; email: string } | null>(null);
   const [settings, setSettings] = useState({ newsletter: true, orderStatus: true, savedAddresses: true });
