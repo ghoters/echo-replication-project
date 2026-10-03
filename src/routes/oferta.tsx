@@ -724,7 +724,7 @@ function OfferPage() {
                             }
                           : undefined
                     }
-                    onClick={() => setSubjects((current) => {
+                    onClick={() => { console.log("CLICK", item.id); setSubjects((current) => {
                       if (item.id === "person") return current.includes("person") ? current : [...current, "person"];
                       if (item.id === "animal") {
                         if (animalCount === 0) { setAnimalCount(1); return current.includes("animal") ? current : [...current, "animal"]; }
