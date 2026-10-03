@@ -155,7 +155,7 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
   imageContain?: boolean | undefined;
   recommended?: boolean;
   recommendedTone?: "light-gray" | "dark-gray" | "purple" | undefined;
-  textInput?: { value: string; placeholder: string; onChange: (value: string) => void; onCommit: () => void; onEdit: () => void; onCancel: () => void; onClear: () => void; committed: boolean; buttonLabel: string; error?: boolean | undefined; onEmpty?: (() => void) | undefined } | undefined;
+  textInput?: { value: string; placeholder: string; onChange: (value: string) => void; onCommit: () => void; onEdit: () => void; onCancel: () => void; onClear: () => void; committed: boolean; buttonLabel: string; error?: boolean | undefined; errorMessage?: string | undefined; onEmpty?: (() => void) | undefined } | undefined;
   titleNowrap?: boolean | undefined;
   matchBadgePadding?: boolean | undefined;
   tightGap?: boolean | undefined;
@@ -256,6 +256,9 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
       <Check className="size-3.5 shrink-0 text-primary" />
     </button>
   ) : null;
+  const textInputError = textInput?.error && textInput.errorMessage && !textInput.committed ? (
+    <p role="alert" className="mt-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">{textInput.errorMessage}</p>
+  ) : null;
   const slot = fullBackground ? <span aria-hidden="true" className={`block shrink-0 ${imageClassName ?? "w-[38%]"}`} /> : <ImageSlot image={image} side={imageSide} contain={Boolean(imageContain)} className={`h-full min-h-[108px] ${imageClassName ?? "w-[38%]"}`} />;
   return (
     <div
@@ -282,7 +285,7 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
       )}
       {recommended && <RecommendedBadge className={recommendedClasses} />}
       {imageSide === "left" && slot}
-      <div className={`relative flex min-w-0 flex-1 flex-col items-start ${imageContain ? "max-w-[76%] pr-0" : priceCentered ? "pr-0" : "pr-5"} ${absEditor ? (recommended && imageSide === "right" ? "pt-[10px] pb-[44px]" : "pt-1 pb-[44px]") : recommended && imageSide === "right" ? "pb-1 pt-[10px]" : "py-1"}`}>
+      <div className={`relative flex min-w-0 flex-1 flex-col items-start ${imageContain ? "max-w-[76%] pr-0" : priceCentered ? "pr-0" : "pr-5"} ${absEditor ? (textInputError ? (recommended && imageSide === "right" ? "pt-[10px] pb-[86px]" : "pt-1 pb-[86px]") : (recommended && imageSide === "right" ? "pt-[10px] pb-[44px]" : "pt-1 pb-[44px]")) : recommended && imageSide === "right" ? "pb-1 pt-[10px]" : "py-1"}`}>
         <div className="flex items-start gap-2 text-sm font-extrabold leading-tight">{Icon && <Icon className="size-4 shrink-0 text-primary" />}<span className={titleNowrap ? "whitespace-nowrap" : "whitespace-pre-line"}>{title}</span></div>
         <p className={`${matchBadgePadding ? "mt-[14px]" : "mt-2"} text-xs font-normal leading-5 text-muted-foreground`}>{text}</p>
         {textInput ? (
@@ -299,6 +302,7 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
                 {textInputTrigger}
               </div>
               {textInputEditor}
+              {textInputError}
               {textInputChip}
             </div>
           )
@@ -333,7 +337,7 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
       </div>
       {imageSide === "right" && slot}
       {absEditor && (
-        <div className="absolute inset-x-3.5 bottom-[18px] z-10 flex flex-col">{textInputEditor}</div>
+        <div className="absolute inset-x-3.5 bottom-[18px] z-10 flex flex-col">{textInputEditor}{textInputError}</div>
       )}
       <span className={`absolute right-3 top-3 size-4 rounded-full border ${selected ? "border-primary bg-primary ring-2 ring-card" : "border-border bg-card"}`} />
     </div>
@@ -689,6 +693,7 @@ function OfferPage() {
                       onChange: (value) => { setCustomText(value); if (customError) setCustomError(false); },
                       committed: customCommitted,
                       error: customError,
+                      errorMessage: customError ? "Uzupełnij opis własnego elementu." : undefined,
                       onEmpty: () => setCustomError(true),
                       onCommit: () => { if (customText.trim()) { setCustomCommitted(true); setSubjects((current) => current.includes("custom") ? current : [...current, "custom"]); } },
                       onEdit: () => setCustomCommitted(false),
@@ -738,13 +743,6 @@ function OfferPage() {
                   />
                 ))}
               </div>
-              {customError && subjects.includes("custom") && (
-                <div className="mt-2 grid gap-3.5 md:grid-cols-3">
-                  <span aria-hidden="true" />
-                  <span aria-hidden="true" />
-                  <p role="alert" className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">Uzupełnij opis własnego elementu.</p>
-                </div>
-              )}
             </section>
 
             <section className={`border-t border-border p-5 transition-all duration-300 ${readySteps[1] ? "bg-card" : "bg-muted/40 opacity-60 saturate-50 pointer-events-none select-none"}`}>
