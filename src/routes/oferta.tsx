@@ -1068,15 +1068,39 @@ function OfferPage() {
               </div>
             </div>
             <p className="mt-3 flex items-center gap-2 text-xs font-semibold text-primary"><Package className="size-4" /> Darmowa wysyłka od 299 zł</p>
-            <Button
-              type="button"
-              disabled={!photosReady || photoBusy || !activeSteps.every(Boolean) || (base === "personalized" && !graverText.trim()) || (subjects.includes("custom") && !customText.trim())}
-              className="mt-3 h-12 w-full text-sm"
-              onClick={() => {
-                saveFigurineConfig({ subjects, personCount, animalCount, customText, customCommitted, size, finish, base, pack, photoCount, color, colorText, colorCommitted, graverText, graverCommitted: graverCommitted || !!graverText.trim() });
-                void navigate({ to: "/zamowienie" });
-              }}
-            >Przejdź dalej <ArrowRight /></Button>
+            {(() => {
+              const missing: string[] = [];
+              if (!activeSteps[0]) missing.push("wybierz, kogo ma przedstawiać figurka");
+              else if (subjects.includes("custom") && !customText.trim()) missing.push("uzupełnij opis własnego elementu");
+              if (!size) missing.push("wybierz rozmiar");
+              if (!finish) missing.push("wybierz wykończenie");
+              if (!base) missing.push("wybierz podstawkę");
+              else if (base === "personalized" && !graverText.trim()) missing.push("uzupełnij treść graweru");
+              if (!pack) missing.push("wybierz opakowanie");
+              if (photoCount <= 0) missing.push("prześlij zdjęcia");
+              const disabled = !photosReady || photoBusy || missing.length > 0;
+              return (
+                <div className="group relative mt-3">
+                  <Button
+                    type="button"
+                    disabled={disabled}
+                    className="h-12 w-full text-sm"
+                    onClick={() => {
+                      saveFigurineConfig({ subjects, personCount, animalCount, customText, customCommitted, size, finish, base, pack, photoCount, color, colorText, colorCommitted, graverText, graverCommitted: graverCommitted || !!graverText.trim() });
+                      void navigate({ to: "/zamowienie" });
+                    }}
+                  >Przejdź dalej <ArrowRight /></Button>
+                  {missing.length > 0 && (
+                    <div role="tooltip" className="pointer-events-none absolute bottom-full left-0 right-0 z-20 mb-2 rounded-md border border-border bg-popover px-3 py-2 text-[11px] text-popover-foreground opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100">
+                      <strong className="block font-semibold">Uzupełnij wszystkie wymagane pola, aby przejść dalej:</strong>
+                      <ul className="mt-1 list-disc pl-4 text-muted-foreground">
+                        {missing.map((m) => <li key={m}>{m}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
           </aside>
         </div>
       </section>
