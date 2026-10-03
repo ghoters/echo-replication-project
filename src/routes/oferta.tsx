@@ -644,27 +644,6 @@ function OfferPage() {
         <h1 className="mt-2 text-[2rem] font-extrabold leading-tight lg:text-[2.7rem]">Stwórz swoją figurkę 3D</h1>
         <p className="mt-3 text-sm text-muted-foreground">Wybierz parametry swojej personalizowanej figurki. Każdy detal ma znaczenie.</p>
 
-        <div ref={stepBarRef} className={`sticky top-[68px] z-40 mt-5 grid grid-cols-2 gap-y-3.5 border-b border-border bg-background ${stepBarStuck ? "pt-1.5 pb-1.5" : "pb-1.5"} sm:grid-cols-3 lg:grid-cols-6`}>
-          {progressSteps.map((label, index) => (
-            <div key={label} className="flex items-center gap-2">
-              <span className={`grid size-8 shrink-0 place-items-center rounded-full border text-[11px] font-bold transition-colors ${activeSteps[index] ? "border-primary bg-primary text-primary-foreground shadow" : "border-border bg-card text-foreground"}`}>{index + 1}</span>
-              <span className={`shrink-0 text-[11px] font-semibold transition-colors ${activeSteps[index] ? "text-primary" : "text-muted-foreground"}`}>{label}</span>
-              {index < progressSteps.length - 1 && (
-                <span
-                  className={`ml-px mr-px block h-px flex-1 bg-border ${index === 1 || index === 3 ? "hidden sm:block" : ""} ${index === 2 ? "sm:hidden lg:block" : ""}`}
-                />
-              )}
-              {index === progressSteps.length - 1 && (
-                <>
-                  {/* Trailing line after the last step stops exactly at the right edge of the preview visual box (aside padding 20px + border 1px; spacer 12px + flex gap 8px + mr 1px). */}
-                  <span className="ml-px mr-px hidden h-px flex-1 bg-border lg:block" />
-                  <span className="hidden w-[12px] shrink-0 lg:block" />
-                </>
-              )}
-            </div>
-          ))}
-        </div>
-
         <div className="mt-5 grid items-start gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(380px,1fr)] 2xl:grid-cols-[300px_minmax(0,1.55fr)_minmax(380px,1fr)]">
           <div className="hidden 2xl:block 2xl:self-stretch">
             <div className="sticky top-[113px] flex max-h-[calc(100vh-160px)] flex-col overflow-y-auto justify-start">
