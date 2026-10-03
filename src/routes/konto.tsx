@@ -60,7 +60,7 @@ function AccountPage() {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) return;
       const { data } = await supabase.from("orders").select("*").eq("user_id", user.id).order("created_at", { ascending: false });
-      setOrders(data ?? []);
+      setOrders((data ?? []) as unknown as typeof orders);
       const { data: r } = await supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin");
       setIsAdmin(!!r?.length);
       const { data: p } = await supabase.from("profiles").select("display_name, email").eq("id", user.id).maybeSingle();
