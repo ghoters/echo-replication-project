@@ -341,16 +341,12 @@
 .order-empty h1 { font-size: 26px; font-weight: 800; }
 .order-empty p { margin: 12px 0 20px; color: var(--order-muted); }
 @media (max-width: 900px) {
-  .order-progress { width: 100%; }
   .order-grid { grid-template-columns: minmax(0, 1fr); }
   .order-sidebar { margin-top: 0; }
 }
 @media (max-width: 600px) {
   .order-layout { width: min(calc(100% - 2rem), 1780px); }
   .order-desktop-break { display: none; }
-  .order-progress { gap: 3px; margin: 20px 0 16px; }
-  .order-progress-step { flex: 1; flex-direction: column; gap: 5px; text-align: center; font-size: 8px; white-space: normal; }
-  .order-progress-step i { display: none; }
   .order-panel { padding: 15px; }
   .order-section-title { gap: 10px; }
   .order-section-title h2 { font-size: 15px; }
@@ -373,7 +369,6 @@
   --order-blue: oklch(0.57 0.23 268);
   --order-outline: oklch(0.88 0.055 267);
 }
-.payment-page .order-progress { margin: 22px auto 0; }
 .payment-layout { width: min(calc(100% - 2rem), 1160px); margin: 0 auto; padding: 44px 0 70px; }
 .payment-intro h1 { font-size: 34px; line-height: 1.2; font-weight: 800; }
 .payment-intro p { margin-top: 10px; color: var(--muted-foreground); font-size: 14px; }
