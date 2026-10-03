@@ -738,7 +738,13 @@ function OfferPage() {
                   />
                 ))}
               </div>
-              {customError && subjects.includes("custom") && <p role="alert" className="mt-2 text-xs text-destructive">Uzupełnij opis własnego elementu.</p>}
+              {customError && subjects.includes("custom") && (
+                <div className="mt-2 grid gap-3.5 md:grid-cols-3">
+                  <span aria-hidden="true" />
+                  <span aria-hidden="true" />
+                  <p role="alert" className="text-xs text-destructive">Uzupełnij opis własnego elementu.</p>
+                </div>
+              )}
             </section>
 
             <section className={`border-t border-border p-5 transition-all duration-300 ${readySteps[1] ? "bg-card" : "bg-muted/40 opacity-60 saturate-50 pointer-events-none select-none"}`}>
