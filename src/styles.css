@@ -67,6 +67,10 @@
   --color-banner-muted: var(--banner-muted);
   --color-promo: var(--promo);
   --color-promo-soft: var(--promo-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
 }
 
 :root {
@@ -115,6 +119,10 @@
   --banner-muted: oklch(0.78 0.05 268);
   --promo: oklch(0.61 0.24 24);
   --promo-soft: oklch(0.945 0.026 12);
+  --success: oklch(0.55 0.15 155);
+  --success-soft: oklch(0.94 0.05 155);
+  --warning: oklch(0.62 0.17 55);
+  --warning-soft: oklch(0.95 0.05 70);
   --shadow-button: 0 8px 20px -8px color-mix(in oklab, var(--primary) 55%, transparent);
 }
 
