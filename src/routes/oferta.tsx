@@ -171,6 +171,10 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
   const handleCommit = () => {
     if (textInput?.value.trim()) {
       textInput.onCommit();
+    } else if (textInput?.onEmpty) {
+      // Clicking Zatwierdź (or Enter) with an empty field flags the missing text
+      // instead of doing nothing silently.
+      textInput.onEmpty();
     }
   };
   const fullBackground = imageFull && image;
