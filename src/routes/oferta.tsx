@@ -616,9 +616,6 @@ function OfferPage() {
 
 
 
-  const [stepBarStuck, setStepBarStuck] = useState(false);
-  const stepBarRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (!restoredConfig.current) {
       restoredConfig.current = true;
@@ -631,18 +628,6 @@ function OfferPage() {
         setGraverText(stored.graverText); setGraverCommitted(stored.graverCommitted);
       }
     }
-    const onScroll = () => {
-      const el = stepBarRef.current;
-      if (!el) return;
-      setStepBarStuck(el.getBoundingClientRect().top <= 69);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
   }, []);
 
   useEffect(() => {
