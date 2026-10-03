@@ -69,7 +69,7 @@ function AccountPage() {
   }, []);
   const [typeFilter, setTypeFilter] = useState<"Wszystkie" | "Figurki na zamówienie" | "Modele 3D">("Wszystkie");
   const [statusFilter, setStatusFilter] = useState<"Wszystkie" | "W realizacji" | "Wymaga działania" | "Zakończone">("Wszystkie");
-  const statusMap: Record<string, string[]> = { "W realizacji": ["W realizacji"], "Wymaga działania": ["Wymaga działania"], "Zakończone": ["Gotowe do pobrania", "Wysłane", "Zakończone"] };
+  const statusMap: Record<string, string[]> = { "W realizacji": ["Opłacone", "Projektowanie", "Wizualizacja", "Modelowanie", "Druk", "Malowanie", "W realizacji"], "Wymaga działania": ["Poprawki", "Wymaga działania"], "Zakończone": ["Gotowe", "Gotowe do pobrania", "Wysłane", "Zakończone"] };
   const filtered = orders.filter(o => (!query || o.order_number.includes(query)) && (statusFilter === "Wszystkie" || statusMap[statusFilter]?.includes(o.status)) && (typeFilter === "Wszystkie" || (typeFilter === "Figurki na zamówienie" ? o.product_type !== "model_3d" : o.product_type === "model_3d")));
   const countFor = (label: string) => label === "Łączna liczba zamówień" ? orders.length : orders.filter(o => o.status === label).length;
   const statusStyle = (status: string): { label: string; className: string; icon: typeof CheckCircle2 | null } => {
@@ -153,7 +153,7 @@ function AccountPage() {
               <div className="flex flex-wrap gap-2">{(["Wszystkie", "W realizacji", "Wymaga działania", "Zakończone"] as const).map(s => <Button key={s} type="button" size="sm" variant={statusFilter === s ? "hero" : "outline"} onClick={() => setStatusFilter(s)} className="h-8 rounded-full px-4 text-[11px] font-semibold">{s}</Button>)}</div>
             </div>
 
-            {filtered.length ? <div className="rounded-md border border-border bg-card px-5 py-2">{orderList(filtered)}</div> : <div className="flex flex-col items-center rounded-md border border-border bg-card px-5 py-10 text-center">
+            {filtered.length ? orderList(filtered) : <div className="flex flex-col items-center rounded-md border border-border bg-card px-5 py-10 text-center">
               <img src={emptyBox} alt="Otwarte puste pudełko" width={768} height={768} className="h-36 w-40 object-contain" />
               <h2 className="mt-3 text-lg font-extrabold">Nie masz jeszcze żadnych zamówień</h2>
               <p className="mt-2 max-w-md text-[12px] leading-5 text-muted-foreground">{query ? `Nie znaleziono zamówień dla „${query}”.` : "Gdy złożysz zamówienie na personalizowaną figurkę 3D lub kupisz gotowy model 3D, pojawi się ono tutaj. Możesz od razu przejść do konfiguratora i stworzyć coś wyjątkowego!"}</p>
