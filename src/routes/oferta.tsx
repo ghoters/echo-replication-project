@@ -155,7 +155,7 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
   imageContain?: boolean | undefined;
   recommended?: boolean;
   recommendedTone?: "light-gray" | "dark-gray" | "purple" | undefined;
-  textInput?: { value: string; placeholder: string; onChange: (value: string) => void; onCommit: () => void; onEdit: () => void; onCancel: () => void; onClear: () => void; committed: boolean; buttonLabel: string } | undefined;
+  textInput?: { value: string; placeholder: string; onChange: (value: string) => void; onCommit: () => void; onEdit: () => void; onCancel: () => void; onClear: () => void; committed: boolean; buttonLabel: string; error?: boolean | undefined; onEmpty?: (() => void) | undefined } | undefined;
   titleNowrap?: boolean | undefined;
   matchBadgePadding?: boolean | undefined;
   tightGap?: boolean | undefined;
@@ -215,9 +215,10 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
           if (textInput.committed) return;
           if (event.relatedTarget && containerRef.current?.contains(event.relatedTarget as Node)) return;
           if (textInput.value.trim()) textInput.onCommit();
+          else if (textInput.onEmpty) textInput.onEmpty();
           else textInput.onCancel();
         }}
-        className="h-7 min-w-0 flex-1 rounded border border-border bg-card px-2 text-[11px] outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className={`h-7 min-w-0 flex-1 rounded border bg-card px-2 text-[11px] outline-none focus-visible:ring-2 focus-visible:ring-ring ${textInput.error ? "border-destructive" : "border-border"}`}
       />
       <button
         type="button"
@@ -497,6 +498,7 @@ function OfferPage() {
   const graverInputRef = useRef<HTMLInputElement>(null);
   const [graverCommitted, setGraverCommitted] = useState(false);
   const [graverError, setGraverError] = useState(false);
+  const [customError, setCustomError] = useState(false);
   const [size, setSize] = useState<string | null>(null);
   const [finish, setFinish] = useState<string | null>(null);
   const [base, setBase] = useState<string | null>(null);
@@ -557,7 +559,7 @@ function OfferPage() {
     subjects.includes("animal") && animalCount > 0
       ? { key: "animal", label: `${animalCount} ${animalCount === 1 ? "zwierzę" : "zwierzęta"}`, onRemove: () => { setAnimalCount(0); setSubjects((current) => current.filter((id) => id !== "animal")); } }
       : null,
-    subjects.includes("custom") ? { key: "custom", label: customCommitted && customText.trim() ? customText.trim() : "Własny element", onRemove: () => { setCustomText(""); setCustomCommitted(false); setSubjects((current) => current.filter((id) => id !== "custom")); } } : null,
+    subjects.includes("custom") ? { key: "custom", label: customCommitted && customText.trim() ? customText.trim() : "Własny element", onRemove: () => { setCustomText(""); setCustomCommitted(false); setCustomError(false); setSubjects((current) => current.filter((id) => id !== "custom")); } } : null,
   ].filter(Boolean) as { key: string; label: string; onRemove?: () => void }[];
 
   // Only the deepest completed step can be cleared, so the step sequence stays intact.
@@ -581,6 +583,7 @@ function OfferPage() {
     setAnimalCount(0);
     setCustomText("");
     setCustomCommitted(false);
+    setCustomError(false);
     setSize(null);
     setFinish(null);
     setBase(null);
@@ -679,8 +682,10 @@ function OfferPage() {
                     textInput={item.id === "custom" ? {
                       value: customText,
                       placeholder: "Wpisz element",
-                      onChange: setCustomText,
+                      onChange: (value) => { setCustomText(value); if (customError) setCustomError(false); },
                       committed: customCommitted,
+                      error: customError,
+                      onEmpty: () => setCustomError(true),
                       onCommit: () => { if (customText.trim()) { setCustomCommitted(true); setSubjects((current) => current.includes("custom") ? current : [...current, "custom"]); } },
                       onEdit: () => setCustomCommitted(false),
                       onCancel: () => { setCustomText(""); setCustomCommitted(false); setSubjects((current) => current.filter((id) => id !== "custom")); },
@@ -720,7 +725,7 @@ function OfferPage() {
                       if (item.id === "custom") {
                         // Deselecting the card keeps the typed description, so re-adding
                         // it restores what the user already wrote; the X button clears it.
-                        if (current.includes("custom")) { return current.filter((id) => id !== "custom"); }
+                        if (current.includes("custom")) { setCustomError(false); return current.filter((id) => id !== "custom"); }
                         if (customText.trim()) setCustomCommitted(true);
                         return [...current, "custom"];
                       }
@@ -729,6 +734,7 @@ function OfferPage() {
                   />
                 ))}
               </div>
+              {customError && subjects.includes("custom") && <p role="alert" className="mt-2 text-xs text-destructive">Uzupełnij opis własnego elementu.</p>}
             </section>
 
             <section className={`border-t border-border p-5 transition-all duration-300 ${readySteps[1] ? "bg-card" : "bg-muted/40 opacity-60 saturate-50 pointer-events-none select-none"}`}>
@@ -1056,7 +1062,7 @@ function OfferPage() {
             <p className="mt-3 flex items-center gap-2 text-xs font-semibold text-primary"><Package className="size-4" /> Darmowa wysyłka od 299 zł</p>
             <Button
               type="button"
-              disabled={!photosReady || photoBusy || !activeSteps.every(Boolean) || (base === "personalized" && !graverText.trim())}
+              disabled={!photosReady || photoBusy || !activeSteps.every(Boolean) || (base === "personalized" && !graverText.trim()) || (subjects.includes("custom") && !customText.trim())}
               className="mt-3 h-12 w-full text-sm"
               onClick={() => {
                 saveFigurineConfig({ subjects, personCount, animalCount, customText, customCommitted, size, finish, base, pack, photoCount, color, colorText, colorCommitted, graverText, graverCommitted: graverCommitted || !!graverText.trim() });
