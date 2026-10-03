@@ -496,6 +496,7 @@ function OfferPage() {
   const [graverText, setGraverText] = useState("");
   const graverInputRef = useRef<HTMLInputElement>(null);
   const [graverCommitted, setGraverCommitted] = useState(false);
+  const [graverError, setGraverError] = useState(false);
   const [size, setSize] = useState<string | null>(null);
   const [finish, setFinish] = useState<string | null>(null);
   const [base, setBase] = useState<string | null>(null);
@@ -514,11 +515,12 @@ function OfferPage() {
   const colorResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cancelColorReset = () => { if (colorResetTimer.current) { clearTimeout(colorResetTimer.current); colorResetTimer.current = null; } };
   const scheduleColorReset = () => { cancelColorReset(); colorResetTimer.current = setTimeout(() => { colorResetTimer.current = null; setColorText(""); setColorCommitted(false); setColor("white"); }, 120); };
-  // Same delayed reset for the engraving text: blur with nothing committed falls back
-  // to the recommended base instead of leaving Personalizowana half-chosen.
+  // Same delayed timer for the engraving text: blur with nothing committed keeps
+  // Personalizowana selected and only flags the missing text after a short grace
+  // period, so clicking Zatwierdź or another base card cancels it first.
   const graverResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cancelGraverReset = () => { if (graverResetTimer.current) { clearTimeout(graverResetTimer.current); graverResetTimer.current = null; } };
-  const scheduleGraverReset = () => { cancelGraverReset(); graverResetTimer.current = setTimeout(() => { graverResetTimer.current = null; setGraverText(""); setGraverCommitted(false); setBase("standard"); }, 120); };
+  const scheduleGraverReset = () => { cancelGraverReset(); graverResetTimer.current = setTimeout(() => { graverResetTimer.current = null; setGraverError(true); }, 120); };
   const colorLabel = color === "white" ? "Biały" : color === "beige" ? "Beżowy" : colorCommitted && colorText.trim() ? `Inny: ${colorText.trim()}` : "Inny";
   const finishLabel = finish === "single" ? `Figurka jednokolorowa (${colorLabel})` : undefined;
 
@@ -569,7 +571,7 @@ function OfferPage() {
   const clearFinish = () => { setFinish(null); setBase(null); setPack(null); };
   // Removing the base choice leaves the step empty (no fallback to Standardowa) and
   // deletes the engraving text, so re-selecting Personalizowana starts from a clean field.
-  const clearBase = () => { cancelGraverReset(); setBase(null); setPack(null); };
+  const clearBase = () => { cancelGraverReset(); setGraverError(false); setBase(null); setPack(null); };
   const clearPack = () => { setPack(null); };
 
   const hasSelection = Boolean(size || finish || base || pack) || personCount > 1 || animalCount > 0 || subjects.includes("custom") || photoCount > 0;
@@ -881,7 +883,7 @@ function OfferPage() {
                       selected={base === item.id}
                       recommendedTone={item.id === "standard" ? baseRecommendedTone : undefined}
                       onClick={() => {
-                        if (base !== item.id) { cancelGraverReset(); setBase(item.id); return; }
+                        if (base !== item.id) { cancelGraverReset(); setGraverError(false); setBase(item.id); return; }
                         if (lastFilledStep !== 3) return;
                         clearBase();
                       }}
@@ -1050,7 +1052,7 @@ function OfferPage() {
             <p className="mt-3 flex items-center gap-2 text-xs font-semibold text-primary"><Package className="size-4" /> Darmowa wysyłka od 299 zł</p>
             <Button
               type="button"
-              disabled={!photosReady || photoBusy || !activeSteps.every(Boolean)}
+              disabled={!photosReady || photoBusy || !activeSteps.every(Boolean) || (base === "personalized" && !graverText.trim())}
               className="mt-3 h-12 w-full text-sm"
               onClick={() => {
                 saveFigurineConfig({ subjects, personCount, animalCount, customText, customCommitted, size, finish, base, pack, photoCount, color, colorText, colorCommitted, graverText, graverCommitted: graverCommitted || !!graverText.trim() });
