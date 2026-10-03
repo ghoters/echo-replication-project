@@ -97,25 +97,26 @@ function AccountPage() {
       <Button asChild variant="outline" size="sm" className="h-9 rounded-md border-primary/40 px-4 text-[11px] font-semibold text-primary hover:bg-brand-soft hover:text-primary"><Link to="/konto/zamowienia/$orderId" params={{ orderId: o.id }}>Szczegóły <ArrowRight className="size-3.5" /></Link></Button>
     </li>;
   })}</ul>;
-  const dashboardOrderList = (list: typeof orders) => <div className="mt-3 overflow-hidden rounded-md border border-border bg-card">
-    <div className="hidden grid-cols-[78px_68px_minmax(120px,1fr)_70px_116px_68px_66px] items-center gap-2 border-b border-border bg-background/40 px-3 py-2 text-[9px] font-semibold text-muted-foreground lg:grid">
+  const cols = "lg:grid-cols-[110px_120px_minmax(160px,1fr)_100px_190px_100px_110px]";
+  const dashboardOrderList = (list: typeof orders) => <div className="mt-3 overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+    <div className={`hidden ${cols} items-center gap-3 border-b border-border px-5 py-3 text-[12px] font-medium text-muted-foreground lg:grid`}>
       <span>Nr zamówienia</span><span>Typ</span><span>Produkt</span><span>Data</span><span>Status</span><span>Cena</span><span>Akcje</span>
     </div>
     <ul className="divide-y divide-border">{list.map(o => {
       const isModel = o.product_type === "model_3d";
       const st = statusStyle(o.status);
-      const StatusIcon = st.icon;
-      return <li key={o.id} className="grid gap-3 px-3 py-2.5 text-left lg:grid-cols-[78px_68px_minmax(120px,1fr)_70px_116px_68px_66px] lg:items-center lg:gap-2">
-        <strong className="text-[11px] font-extrabold">{o.order_number}</strong>
-        <span className={`w-fit rounded-md px-2.5 py-1 text-[10px] font-semibold ${isModel ? "bg-success-soft text-success" : "bg-brand-soft text-primary"}`}>{isModel ? "Model 3D" : "Figurka 3D"}</span>
+      const StatusIcon = st.icon ?? Clock3;
+      return <li key={o.id} className={`grid gap-3 px-5 py-3 text-left ${cols} lg:items-center`}>
+        <strong className="text-[14px] font-extrabold">{o.order_number}</strong>
+        <span className={`w-fit whitespace-nowrap rounded-md px-3 py-1.5 text-[12px] font-bold ${isModel ? "bg-success-soft text-success" : "bg-brand-soft text-primary"}`}>{isModel ? "Model 3D" : "Figurka 3D"}</span>
         <span className="flex min-w-0 items-center gap-3">
-          <span className="grid size-10 shrink-0 place-items-center overflow-hidden rounded-sm bg-secondary"><img src={isModel ? giftBox : couple} alt="" loading="lazy" className="size-full object-contain" /></span>
-          <span className="truncate text-[11px] font-semibold">{o.configuration?.title ?? (isModel ? "Gotowy model 3D" : "Figurka personalizowana")}</span>
+          <span className="grid size-11 shrink-0 place-items-center overflow-hidden rounded-md bg-secondary"><img src={isModel ? giftBox : couple} alt="" loading="lazy" className="size-full object-contain" /></span>
+          <span className="truncate text-[13px] font-medium">{o.configuration?.title ?? (isModel ? "Gotowy model 3D" : "Figurka personalizowana")}</span>
         </span>
-        <span className="text-[10px] text-muted-foreground">{new Date(o.created_at).toLocaleDateString("pl-PL")}</span>
-        <span className={`inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-semibold ${st.className}`}>{StatusIcon && <StatusIcon className="size-3" />}{st.label}</span>
-        <strong className="text-[11px] font-extrabold">{(Number(o.figurine_price) + Number(o.delivery_price)).toFixed(2).replace(".", ",")} zł</strong>
-        <Button asChild variant="outline" size="sm" className="h-8 w-fit rounded-md border-primary/40 px-3 text-[10px] font-semibold text-primary hover:bg-brand-soft hover:text-primary"><Link to="/konto/zamowienia/$orderId" params={{ orderId: o.id }}>Zobacz <ArrowRight className="size-3" /></Link></Button>
+        <span className="text-[13px] text-muted-foreground">{new Date(o.created_at).toLocaleDateString("pl-PL")}</span>
+        <span className={`inline-flex w-fit items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] font-bold ${st.className}`}><StatusIcon className="size-3.5" />{st.label}</span>
+        <strong className="whitespace-nowrap text-[14px] font-extrabold">{(Number(o.figurine_price) + Number(o.delivery_price)).toFixed(2).replace(".", ",")} zł</strong>
+        <Button asChild variant="outline" className="h-10 w-fit rounded-md border-primary/40 px-4 text-[13px] font-bold text-primary hover:bg-brand-soft hover:text-primary"><Link to="/konto/zamowienia/$orderId" params={{ orderId: o.id }}>Zobacz <ArrowRight className="size-4" /></Link></Button>
       </li>;
     })}</ul>
   </div>;
@@ -141,13 +142,49 @@ function AccountPage() {
           {noticeOpen && <div role="status" className="border-b border-border bg-secondary px-5 py-2 text-[11px] text-foreground">Nie masz nowych powiadomień.</div>}
 
           {view === "dashboard" ? <div className="space-y-4 p-4 sm:p-5">
-            <div className="grid gap-4 lg:grid-cols-[1.8fr_.95fr]">
-              <section className="relative min-h-[174px] overflow-hidden rounded-md border border-border bg-gradient-to-br from-secondary via-card to-background p-5 sm:p-6">
-                <div className="relative z-10 max-w-[65%] sm:max-w-[55%]"><h1 className="text-xl font-extrabold text-foreground sm:text-2xl">Cześć!</h1><p className="mt-1 text-[12px] leading-5 text-foreground">Witaj w swoim panelu klienta. Tutaj znajdziesz wszystkie informacje o swoich zamówieniach, projektach i plikach.</p><Button asChild variant="hero" size="sm" className="mt-5 px-4"><Link to="/oferta">Stwórz swoją figurkę 3D <ArrowRight /></Link></Button></div>
-                <img src={couple} alt="Figurka pary z psem" width={768} height={768} className="absolute -bottom-9 right-0 h-[205px] w-[45%] object-contain object-bottom sm:right-5 sm:h-[230px]" />
-              </section>
-              <section className="relative flex min-h-[174px] overflow-hidden rounded-md border border-border bg-card p-3"><div className="relative w-full overflow-hidden rounded-md bg-secondary/70 p-5"><div className="relative z-10 max-w-[66%]"><h2 className="text-[13px] font-bold">Sprawdź naszą ofertę</h2><p className="mt-2 text-[11px] leading-5">Stwórz własną, spersonalizowaną figurkę 3D z Twojego zdjęcia.</p><Link to="/oferta" className="mt-5 inline-flex items-center gap-1 text-[11px] font-semibold text-primary underline underline-offset-2">Zobacz ofertę <ArrowRight className="size-3" /></Link></div><img src={giftBox} alt="Pudełko prezentowe" width={768} height={768} className="absolute -bottom-7 -right-7 h-[180px] w-[45%] object-contain" /></div></section>
-            </div>
+            <div><h1 className="text-2xl font-extrabold">Cześć{profile?.display_name ? `, ${profile.display_name.split(" ")[0]}` : ""}!</h1><p className="mt-1 text-[13px] text-muted-foreground">Oto podsumowanie Twojego konta i zamówień.</p></div>
+            {(() => {
+              const cur = orders[0];
+              const stages = [
+                { name: "Opłacone", icon: CreditCard }, { name: "Projektowanie", icon: Pencil }, { name: "Wizualizacja", icon: Camera }, { name: "Modelowanie", icon: Box },
+                { name: "Druk", icon: Package }, { name: "Malowanie", icon: Paintbrush }, { name: "Gotowe", icon: CheckCircle2 }, { name: "Wysłane", icon: Truck },
+              ];
+              const idx = cur ? Math.max(0, stages.findIndex(s => s.name === cur.status)) : -1;
+              const fmt = (d: Date) => d.toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" });
+              const start = cur ? new Date(new Date(cur.created_at).getTime() + 14 * 864e5) : null;
+              const end = cur ? new Date(new Date(cur.created_at).getTime() + 18 * 864e5) : null;
+              const needsAction = cur && (cur.status === "Wizualizacja" || cur.status === "Poprawki");
+              return <div className="grid gap-4 lg:grid-cols-[1fr_1.15fr]">
+                <section className="relative min-h-[260px] overflow-hidden rounded-lg border border-border bg-gradient-to-br from-secondary via-card to-background p-6 shadow-sm">
+                  <div className="relative z-10 max-w-[55%]">
+                    {cur ? <>
+                      <span className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-[11px] font-semibold text-primary-foreground"><Bell className="size-3.5" />{needsAction ? "Wymaga Twojej uwagi" : statusStyle(cur.status).label}</span>
+                      <h2 className="mt-4 text-xl font-extrabold">{cur.product_type === "model_3d" ? "Model" : "Figurka"} {cur.order_number}</h2>
+                      <p className="mt-1 text-[14px] leading-6">{needsAction ? "Wizualizacja jest gotowa do akceptacji." : `Aktualny etap: ${cur.status}.`}</p>
+                      <Button asChild variant="hero" className="mt-5 px-5"><Link to="/konto/zamowienia/$orderId" params={{ orderId: cur.id }}>{needsAction ? "Zobacz wizualizację" : "Zobacz zamówienie"} <ArrowRight /></Link></Button>
+                    </> : <>
+                      <span className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-[11px] font-semibold text-primary-foreground"><Lightbulb className="size-3.5" />Zacznij tutaj</span>
+                      <h2 className="mt-4 text-xl font-extrabold">Twoja pierwsza figurka</h2>
+                      <p className="mt-1 text-[14px] leading-6">Prześlij zdjęcie, a my stworzymy z niego wyjątkową figurkę 3D.</p>
+                      <Button asChild variant="hero" className="mt-5 px-5"><Link to="/oferta">Stwórz swoją figurkę 3D <ArrowRight /></Link></Button>
+                    </>}
+                  </div>
+                  <img src={couple} alt="Figurka pary" width={768} height={768} className="absolute bottom-0 right-2 h-[95%] w-[45%] object-contain object-bottom" />
+                </section>
+                <section className="rounded-lg border border-border bg-card p-5 shadow-sm">
+                  {cur ? <>
+                    <p className="text-[13px] font-semibold">Twoje aktualne zamówienie</p>
+                    <div className="mt-1 flex items-center justify-between gap-3 border-b border-border pb-3"><strong className="text-xl font-extrabold">{cur.order_number}</strong><Link to="/konto/zamowienia/$orderId" params={{ orderId: cur.id }} className="inline-flex items-center gap-1 text-[12px] font-bold text-primary">Zobacz szczegóły <ArrowRight className="size-3.5" /></Link></div>
+                    <ol className="mt-4 grid grid-cols-8 gap-0">{stages.map((s, i) => { const Icon = s.icon; const done = i <= idx; const active = i === idx; return <li key={s.name} className="relative flex flex-col items-center text-center">
+                      {i > 0 && <span className={`absolute right-1/2 top-4 h-0.5 w-full -translate-y-1/2 ${i <= idx ? "bg-primary/50" : "bg-border"}`} />}
+                      <span className={`relative z-10 grid size-8 place-items-center rounded-full border ${active ? "border-primary bg-primary text-primary-foreground" : done ? "border-primary/30 bg-brand-soft text-primary" : "border-border bg-card text-muted-foreground"}`}><Icon className="size-3.5" /></span>
+                      <span className={`mt-1.5 text-[8px] leading-tight sm:text-[9px] ${active ? "font-bold text-primary" : "text-muted-foreground"}`}>{s.name}</span>
+                    </li>; })}</ol>
+                    <div className="mt-5 flex items-center gap-4 rounded-lg bg-brand-soft p-4"><Clock3 className="size-7 shrink-0 text-primary" /><div><p className="text-[12px] text-muted-foreground">Planowane zakończenie</p><p className="text-lg font-extrabold text-primary">{start!.getDate()} – {fmt(end!)}</p></div></div>
+                  </> : <div className="flex h-full flex-col justify-center"><p className="text-[13px] font-semibold">Twoje aktualne zamówienie</p><p className="mt-2 text-[13px] text-muted-foreground">Nie masz jeszcze aktywnego zamówienia. Tutaj zobaczysz postęp realizacji: od płatności, przez projekt i druk, aż po wysyłkę.</p><Button asChild variant="outline" className="mt-4 w-fit border-primary/40 text-primary"><Link to="/sklep">Zobacz gotowe modele <ArrowRight /></Link></Button></div>}
+                </section>
+              </div>;
+            })()}
 
             <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
               {[
@@ -158,10 +195,15 @@ function AccountPage() {
               ].map(({ label, icon: Icon, color, bg }) => <Button key={label} type="button" variant="ghost" onClick={() => setView("orders")} className="h-auto min-h-[98px] min-w-0 justify-start gap-2 rounded-md border border-border bg-card px-2 py-3 text-left shadow-sm hover:bg-card sm:gap-3 sm:px-4"><span className={`grid size-9 shrink-0 place-items-center rounded-full sm:size-11 ${bg} ${color}`}><Icon className="size-5" /></span><span className="min-w-0 flex-1 whitespace-normal"><span className="block break-words text-[10px] leading-4 font-semibold">{label}</span><strong className="block text-base leading-6">{countFor(label)}</strong><span className="block text-[10px] leading-4 font-normal text-muted-foreground">{countFor(label) ? "Zamówienia" : "Brak zamówień"}</span></span><ChevronRight className="hidden size-3 shrink-0 text-primary sm:block" /></Button>)}
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-[2.1fr_1fr]">
-              <section className="flex min-h-[295px] flex-col rounded-md border border-border bg-card p-4 shadow-sm"><div className="flex items-center justify-between gap-3"><h2 className="text-sm font-extrabold">Ostatnie zamówienia</h2><Button type="button" variant="link" onClick={() => setView("orders")} className="h-auto p-0 text-[11px]">Zobacz wszystkie <ArrowRight className="size-3" /></Button></div>{orders.length ? dashboardOrderList(orders.slice(0, 3)) : <div className="flex flex-1 flex-col items-center justify-center py-3 text-center"><img src={emptyBox} alt="Otwarte puste pudełko" loading="lazy" width={768} height={768} className="h-[110px] w-[150px] object-contain" /><h3 className="mt-1 text-[15px] font-bold">Brak zamówień</h3><p className="mt-1 text-[11px] leading-5 text-muted-foreground">Na razie nie masz jeszcze żadnych zamówień.<br />Rozpocznij od stworzenia własnej figurki 3D lub wybierz gotowy model ze sklepu.</p><Button asChild variant="hero" size="sm" className="mt-3 px-6"><Link to="/oferta">Przejdź do oferty <ArrowRight /></Link></Button></div>}</section>
-              <section className="flex min-h-[295px] flex-col rounded-md border border-border bg-card p-4 shadow-sm"><h2 className="text-sm font-extrabold">Ostatnia aktywność</h2><div className="flex flex-1 items-center justify-center text-center text-[11px] text-muted-foreground">Brak ostatniej aktywności.</div><Link to="/oferta" className="flex items-center gap-3 rounded-md border border-border bg-secondary/50 p-3 text-[11px] leading-5 hover:border-primary/40"><span className="grid size-11 shrink-0 place-items-center rounded-full bg-secondary text-primary"><Lightbulb className="size-5" /></span><span className="flex-1">Brak zamówień w świetnym momencie,<br />aby stworzyć swoją pierwszą figurkę!</span><ChevronRight className="size-4 text-primary" /></Link></section>
-            </div>
+            <section className="pt-2">
+              <div className="flex items-center justify-between gap-3"><h2 className="text-lg font-extrabold">Ostatnie zamówienia</h2><Button type="button" variant="link" onClick={() => setView("orders")} className="h-auto p-0 text-[13px] font-bold">Zobacz wszystkie <ArrowRight className="size-4" /></Button></div>
+              {orders.length ? dashboardOrderList(orders.slice(0, 3)) : <div className="mt-3 flex flex-col items-center justify-center rounded-lg border border-border bg-card py-6 text-center"><img src={emptyBox} alt="Otwarte puste pudełko" loading="lazy" width={768} height={768} className="h-[110px] w-[150px] object-contain" /><h3 className="mt-1 text-[15px] font-bold">Brak zamówień</h3><p className="mt-1 text-[12px] leading-5 text-muted-foreground">Rozpocznij od stworzenia własnej figurki 3D lub wybierz gotowy model ze sklepu.</p><Button asChild variant="hero" size="sm" className="mt-3 px-6"><Link to="/oferta">Przejdź do oferty <ArrowRight /></Link></Button></div>}
+            </section>
+
+            <section className="pt-2">
+              <h2 className="text-lg font-extrabold">Ostatnia aktywność</h2>
+              {orders.length ? <ul className="mt-3 space-y-3">{orders.slice(0, 4).map(o => <li key={o.id} className="flex items-center gap-3 text-[13px]"><span className="grid size-9 shrink-0 place-items-center rounded-full bg-brand-soft text-primary"><Package className="size-4" /></span><span className="flex-1"><strong className="font-bold">{o.order_number}</strong> — status: {statusStyle(o.status).label}</span><span className="text-[12px] text-muted-foreground">{new Date(o.created_at).toLocaleDateString("pl-PL")}</span></li>)}</ul> : <Link to="/oferta" className="mt-3 flex items-center gap-3 text-[13px] hover:text-primary"><span className="grid size-9 shrink-0 place-items-center rounded-full bg-brand-soft text-primary"><Lightbulb className="size-4" /></span>Świetny moment, aby stworzyć swoją pierwszą figurkę!<ChevronRight className="size-4 text-primary" /></Link>}
+            </section>
 
             <Link to="/oferta" className="relative flex min-h-[82px] items-center gap-3 overflow-hidden rounded-md border border-border bg-gradient-to-r from-secondary/60 via-card to-secondary/60 p-4 shadow-sm hover:border-primary/40"><img src={couple} alt="" loading="lazy" width={768} height={768} className="hidden h-[72px] w-[145px] shrink-0 object-cover object-top sm:block" /><div className="min-w-0 flex-1"><h2 className="text-sm font-extrabold">Zamów swoją wymarzoną figurkę 3D!</h2><p className="mt-1 text-[11px] leading-5">Przekształć swoje zdjęcia w wyjątkową figurkę, która będzie doskonałą pamiątką lub prezentem.</p></div><span className="hidden items-center gap-2 rounded-md bg-primary px-4 py-2 text-[11px] font-semibold text-primary-foreground sm:inline-flex">Zobacz ofertę <ArrowRight className="size-3" /></span></Link>
           </div> : view === "orders" ? <section className="min-h-[520px] space-y-4 p-4 sm:p-6">
