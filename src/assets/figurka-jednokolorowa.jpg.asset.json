@@ -1,11 +1,11 @@
 {
-  "asset_id": "736ae2a6-4644-4484-9033-af0d977ca1a3",
-  "content_type": "image/jpeg",
-  "created_at": "2026-10-03T01:50:09Z",
+  "version": 1,
+  "asset_id": "fa43ff0b-505b-4146-8215-2c1f3ea520e5",
+  "project_id": "f922ddd7-fbc0-4b39-9b48-4adf838c4bad",
+  "url": "/__l5e/assets-v1/fa43ff0b-505b-4146-8215-2c1f3ea520e5/figurka-jednokolorowa.jpg",
+  "r2_key": "a/v1/f922ddd7-fbc0-4b39-9b48-4adf838c4bad/fa43ff0b-505b-4146-8215-2c1f3ea520e5/figurka-jednokolorowa.jpg",
   "original_filename": "figurka-jednokolorowa.jpg",
-  "project_id": "d3fa59bd-b19f-4ad6-8918-179b28425315",
-  "r2_key": "a/v1/d3fa59bd-b19f-4ad6-8918-179b28425315/736ae2a6-4644-4484-9033-af0d977ca1a3/figurka-jednokolorowa.jpg",
   "size": 174975,
-  "url": "/__l5e/assets-v1/736ae2a6-4644-4484-9033-af0d977ca1a3/figurka-jednokolorowa.jpg",
-  "version": 1
+  "content_type": "image/jpeg",
+  "created_at": "2026-10-04T03:10:55Z"
 }

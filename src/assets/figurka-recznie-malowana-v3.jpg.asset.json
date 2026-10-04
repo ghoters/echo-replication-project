@@ -1,11 +1,11 @@
 {
-  "asset_id": "8e4da9a4-d1cb-49fc-bb51-60701cf51908",
-  "content_type": "image/jpeg",
-  "created_at": "2026-10-03T01:50:12Z",
+  "version": 1,
+  "asset_id": "6ad3a54d-3168-4121-a782-4afa376ee99d",
+  "project_id": "f922ddd7-fbc0-4b39-9b48-4adf838c4bad",
+  "url": "/__l5e/assets-v1/6ad3a54d-3168-4121-a782-4afa376ee99d/figurka-recznie-malowana-v3.jpg",
+  "r2_key": "a/v1/f922ddd7-fbc0-4b39-9b48-4adf838c4bad/6ad3a54d-3168-4121-a782-4afa376ee99d/figurka-recznie-malowana-v3.jpg",
   "original_filename": "figurka-recznie-malowana-v3.jpg",
-  "project_id": "d3fa59bd-b19f-4ad6-8918-179b28425315",
-  "r2_key": "a/v1/d3fa59bd-b19f-4ad6-8918-179b28425315/8e4da9a4-d1cb-49fc-bb51-60701cf51908/figurka-recznie-malowana-v3.jpg",
   "size": 215832,
-  "url": "/__l5e/assets-v1/8e4da9a4-d1cb-49fc-bb51-60701cf51908/figurka-recznie-malowana-v3.jpg",
-  "version": 1
+  "content_type": "image/jpeg",
+  "created_at": "2026-10-04T03:11:00Z"
 }

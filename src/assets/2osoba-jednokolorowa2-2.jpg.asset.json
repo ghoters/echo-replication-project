@@ -1,11 +1,11 @@
 {
-  "asset_id": "70e765bf-113c-4d89-b12e-84975c87b3f4",
-  "content_type": "image/jpeg",
-  "created_at": "2026-10-03T01:49:26Z",
+  "version": 1,
+  "asset_id": "c3e181cb-e196-4466-a387-a1887504ce2b",
+  "project_id": "f922ddd7-fbc0-4b39-9b48-4adf838c4bad",
+  "url": "/__l5e/assets-v1/c3e181cb-e196-4466-a387-a1887504ce2b/2osoba-jednokolorowa2-2.jpg",
+  "r2_key": "a/v1/f922ddd7-fbc0-4b39-9b48-4adf838c4bad/c3e181cb-e196-4466-a387-a1887504ce2b/2osoba-jednokolorowa2-2.jpg",
   "original_filename": "2osoba-jednokolorowa2-2.jpg",
-  "project_id": "d3fa59bd-b19f-4ad6-8918-179b28425315",
-  "r2_key": "a/v1/d3fa59bd-b19f-4ad6-8918-179b28425315/70e765bf-113c-4d89-b12e-84975c87b3f4/2osoba-jednokolorowa2-2.jpg",
   "size": 358977,
-  "url": "/__l5e/assets-v1/70e765bf-113c-4d89-b12e-84975c87b3f4/2osoba-jednokolorowa2-2.jpg",
-  "version": 1
+  "content_type": "image/jpeg",
+  "created_at": "2026-10-04T03:09:57Z"
 }

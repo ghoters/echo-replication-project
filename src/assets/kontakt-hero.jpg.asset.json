@@ -1,11 +1,11 @@
 {
-  "asset_id": "b2efa251-5e67-462f-9ca0-f705f6f0148b",
-  "content_type": "image/jpeg",
-  "created_at": "2026-10-03T01:50:21Z",
+  "version": 1,
+  "asset_id": "f9a545a1-2793-4529-954d-d7238e343dcb",
+  "project_id": "f922ddd7-fbc0-4b39-9b48-4adf838c4bad",
+  "url": "/__l5e/assets-v1/f9a545a1-2793-4529-954d-d7238e343dcb/kontakt-hero.jpg",
+  "r2_key": "a/v1/f922ddd7-fbc0-4b39-9b48-4adf838c4bad/f9a545a1-2793-4529-954d-d7238e343dcb/kontakt-hero.jpg",
   "original_filename": "kontakt-hero.jpg",
-  "project_id": "d3fa59bd-b19f-4ad6-8918-179b28425315",
-  "r2_key": "a/v1/d3fa59bd-b19f-4ad6-8918-179b28425315/b2efa251-5e67-462f-9ca0-f705f6f0148b/kontakt-hero.jpg",
   "size": 107686,
-  "url": "/__l5e/assets-v1/b2efa251-5e67-462f-9ca0-f705f6f0148b/kontakt-hero.jpg",
-  "version": 1
+  "content_type": "image/jpeg",
+  "created_at": "2026-10-04T03:11:13Z"
 }
