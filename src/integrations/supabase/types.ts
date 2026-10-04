@@ -140,6 +140,44 @@ export type Database = {
           },
         ]
       }
+      order_messages: {
+        Row: {
+          attachment_path: string | null
+          body: string
+          created_at: string
+          from_admin: boolean
+          id: string
+          order_id: string
+          sender_id: string
+        }
+        Insert: {
+          attachment_path?: string | null
+          body: string
+          created_at?: string
+          from_admin?: boolean
+          id?: string
+          order_id: string
+          sender_id?: string
+        }
+        Update: {
+          attachment_path?: string | null
+          body?: string
+          created_at?: string
+          from_admin?: boolean
+          id?: string
+          order_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_messages_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_visualizations: {
         Row: {
           created_at: string
