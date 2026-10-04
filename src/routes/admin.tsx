@@ -32,6 +32,7 @@ type Profile = { id: string; display_name: string; email: string; created_at: st
 type Alerts = { revisions: number; accepted: boolean; messages: number };
 
 const input = "h-9 rounded-md border border-border bg-background px-2 text-[13px] outline-none focus:border-primary";
+const cols = "lg:grid-cols-[120px_minmax(170px,1fr)_minmax(220px,1.5fr)_100px_160px_100px_130px]";
 const PRODUCT_LABELS: Record<string, string> = { custom_figurine: "Figurka 3D" };
 
 const statusStyle: Record<string, string> = {
@@ -173,36 +174,41 @@ function AdminPage() {
             </div>
           </div>
 
-          <div className="mt-4 space-y-3">
-            {list.map(o => {
+          <div className="mt-4 overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+            <div className={`hidden ${cols} items-center gap-3 border-b border-border px-5 py-3 text-[12px] font-medium text-muted-foreground lg:grid`}>
+              <span>Nr zamówienia</span><span>Klient</span><span>Produkt</span><span>Data</span><span>Status</span><span>Cena</span><span>Akcje</span>
+            </div>
+            <ul className="divide-y divide-border">{list.map(o => {
               const p = who(o.user_id);
               const a = alerts[o.id];
               const total = Number(o.figurine_price) + Number(o.delivery_price);
-              return <div key={o.id} className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4 shadow-sm transition-shadow hover:shadow-md md:flex-row md:items-center">
-                {thumbs[o.id] ? <img src={thumbs[o.id]} alt="" className="size-16 shrink-0 rounded-md border border-border object-cover" /> : <div className="grid size-16 shrink-0 place-items-center rounded-md border border-border bg-muted text-[10px] font-bold text-muted-foreground">3D</div>}
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-[15px] font-extrabold">{o.order_number.startsWith("#") ? o.order_number : `#${o.order_number}`}</span>
-                    <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-extrabold ${statusStyle[o.status] ?? "bg-muted text-foreground"}`}>{o.status}</span>
-                  </div>
-                  <p className="mt-0.5 truncate text-[13px] font-semibold">{configSummary(o)}</p>
-                  <p className="text-[11px] text-muted-foreground">{p ? <>{p.display_name || "Klient"} · {p.email}</> : o.user_id.slice(0, 8)} · złożone {fmtDate(o.created_at)}</p>
-                  {a && (a.revisions > 0 || a.accepted || a.messages > 0) && <div className="mt-2 flex flex-wrap gap-1.5">
-                    {a.revisions > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-[hsl(30_90%_50%/0.15)] px-2 py-0.5 text-[10px] font-extrabold text-[hsl(25_95%_35%)]"><PencilLine className="size-3" /> Poprawki do obsłużenia ({a.revisions})</span>}
-                    {a.accepted && <span className="inline-flex items-center gap-1 rounded-full bg-[hsl(145_60%_38%/0.15)] px-2 py-0.5 text-[10px] font-extrabold text-[hsl(145_65%_28%)]"><CheckCircle2 className="size-3" /> Wizualizacja zaakceptowana</span>}
-                    {a.messages > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-[hsl(210_80%_50%/0.12)] px-2 py-0.5 text-[10px] font-extrabold text-[hsl(210_80%_38%)]"><MessageSquare className="size-3" /> Wiadomości od klienta ({a.messages})</span>}
-                  </div>}
-                </div>
-                <div className="flex items-center gap-3 md:flex-col md:items-end md:gap-2">
-                  <span className="text-[15px] font-extrabold">{money(total)}</span>
-                  <div className="flex items-center gap-1.5">
-                    <Button asChild size="sm" variant="hero" className="h-8 text-[12px]"><Link to="/admin/zamowienia/$orderId" params={{ orderId: o.id }}>Przejdź do obsługi <ArrowRight /></Link></Button>
-                    <Button variant="ghost" size="icon" aria-label="Usuń" className="size-8" onClick={() => remove(o)}><Trash2 className="size-4 text-destructive" /></Button>
-                  </div>
-                </div>
-              </div>;
-            })}
-            {!list.length && <p className="rounded-lg border border-border bg-card py-10 text-center text-sm text-muted-foreground">Brak zamówień spełniających kryteria.</p>}
+              return <li key={o.id} className={`grid gap-3 px-5 py-3 ${cols} lg:items-center`}>
+                <strong className="text-[14px] font-extrabold">{o.order_number.startsWith("#") ? o.order_number : `#${o.order_number}`}</strong>
+                <span className="min-w-0">
+                  <span className="block truncate text-[13px] font-bold">{p?.display_name || "Klient"}</span>
+                  <span className="block truncate text-[11px] text-muted-foreground">{p?.email ?? o.user_id.slice(0, 8)}</span>
+                </span>
+                <span className="flex min-w-0 items-center gap-3">
+                  {thumbs[o.id] ? <img src={thumbs[o.id]} alt="" loading="lazy" className="size-11 shrink-0 rounded-md border border-border object-cover" /> : <div className="grid size-11 shrink-0 place-items-center rounded-md bg-secondary text-[10px] font-bold text-muted-foreground">3D</div>}
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[13px] font-medium">{configSummary(o)}</span>
+                    {a && (a.revisions > 0 || a.accepted || a.messages > 0) && <span className="mt-1 flex flex-wrap gap-1">
+                      {a.revisions > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-[hsl(30_90%_50%/0.15)] px-2 py-0.5 text-[10px] font-extrabold text-[hsl(25_95%_35%)]"><PencilLine className="size-3" /> Poprawki ({a.revisions})</span>}
+                      {a.accepted && <span className="inline-flex items-center gap-1 rounded-full bg-[hsl(145_60%_38%/0.15)] px-2 py-0.5 text-[10px] font-extrabold text-[hsl(145_65%_28%)]"><CheckCircle2 className="size-3" /> Zaakceptowana</span>}
+                      {a.messages > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-[hsl(210_80%_50%/0.12)] px-2 py-0.5 text-[10px] font-extrabold text-[hsl(210_80%_38%)]"><MessageSquare className="size-3" /> Wiadomości ({a.messages})</span>}
+                    </span>}
+                  </span>
+                </span>
+                <span className="text-[13px] text-muted-foreground">{fmtDate(o.created_at)}</span>
+                <span className={`inline-flex w-fit items-center whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] font-extrabold ${statusStyle[o.status] ?? "bg-muted text-foreground"}`}>{o.status}</span>
+                <strong className="whitespace-nowrap text-[14px] font-extrabold">{money(total)}</strong>
+                <span className="flex items-center gap-2">
+                  <Button asChild variant="outline" className="h-9 rounded-md border-primary/40 px-3 text-[12px] font-bold text-primary hover:bg-brand-soft hover:text-primary"><Link to="/admin/zamowienia/$orderId" params={{ orderId: o.id }}>Obsługa <ArrowRight className="size-3.5" /></Link></Button>
+                  <Button variant="ghost" size="icon" aria-label="Usuń" className="size-8" onClick={() => remove(o)}><Trash2 className="size-4 text-destructive" /></Button>
+                </span>
+              </li>;
+            })}</ul>
+            {!list.length && <p className="py-10 text-center text-sm text-muted-foreground">Brak zamówień spełniających kryteria.</p>}
           </div>
         </> : <section className="mt-6 overflow-x-auto rounded-md border border-border bg-card p-4 shadow-sm">
           <table className="w-full min-w-[560px] text-left text-[13px]">
