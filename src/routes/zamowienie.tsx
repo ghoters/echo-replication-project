@@ -148,9 +148,9 @@ function OrderPage() {
           title: subjectLabel,
           size: size?.label ?? "",
           finish: finishLabel ?? "",
-          base: config.base === "personalized" && config.graverText ? `${base?.label} — ${config.graverText}` : base?.label ?? "",
+          base: config!.base === "personalized" && config!.graverText ? `${base?.label} — ${config!.graverText}` : base?.label ?? "",
           people: subjectLabel,
-          extras: config.subjects.includes("custom") ? (config.customText || "Własny element") : "Brak",
+          extras: config!.subjects.includes("custom") ? (config!.customText || "Własny element") : "Brak",
         },
       });
       void navigate({ to: "/platnosc" });
