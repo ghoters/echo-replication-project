@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { ORDER_STATUSES } from "@/lib/order-workflow";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
@@ -22,7 +23,7 @@ export const Route = createFileRoute("/admin")({
   component: AdminPage,
 });
 
-const STATUSES: [string, ...string[]] = ["W realizacji", "Gotowe do pobrania", "Wysłane", "Zakończone", "Anulowane"];
+const STATUSES: readonly string[] = ORDER_STATUSES;
 type Order = { id: string; user_id: string; order_number: string; figurine_price: number; delivery_price: number; delivery_label: string; status: string; created_at: string };
 type Profile = { id: string; display_name: string; email: string; created_at: string };
 const input = "h-9 rounded-md border border-border bg-background px-2 text-[13px] outline-none focus:border-primary";
@@ -34,7 +35,7 @@ function AdminPage() {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState("");
-  const [form, setForm] = useState({ user_id: "", figurine_price: "0", delivery_price: "0", delivery_label: "Kurier", status: STATUSES[0] });
+  const [form, setForm] = useState({ user_id: "", figurine_price: "0", delivery_price: "0", delivery_label: "Kurier", status: "Opłacone" });
   const [err, setErr] = useState("");
 
   const load = async () => {
@@ -109,7 +110,7 @@ function AdminPage() {
             </div>
             <div className="mt-4 overflow-x-auto">
               <table className="w-full min-w-[760px] text-left text-[13px]">
-                <thead className="text-[11px] uppercase text-muted-foreground"><tr><th className="py-2">Numer</th><th>Klient</th><th>Data</th><th>Figurka</th><th>Dostawa</th><th>Status</th><th /></tr></thead>
+                <thead className="text-[11px] uppercase text-muted-foreground"><tr><th className="py-2">Numer</th><th>Klient</th><th>Data</th><th>Figurka</th><th>Dostawa</th><th>Status</th><th /><th /></tr></thead>
                 <tbody className="divide-y divide-border">{list.map(o => <tr key={o.id}>
                   <td className="py-2 font-bold">{o.order_number}</td>
                   <td>{who(o.user_id)}</td>
@@ -117,6 +118,7 @@ function AdminPage() {
                   <td><input type="number" defaultValue={o.figurine_price} onBlur={e => Number(e.target.value) !== Number(o.figurine_price) && update(o.id, { figurine_price: Number(e.target.value) })} className={`${input} w-24`} /></td>
                   <td>{o.delivery_label} · {Number(o.delivery_price).toFixed(2)} zł</td>
                   <td><select className={input} value={o.status} onChange={e => update(o.id, { status: e.target.value })}>{STATUSES.map(s => <option key={s}>{s}</option>)}</select></td>
+                  <td><Button asChild size="sm" variant="outline" className="h-8 text-[11px]"><Link to="/admin/zamowienia/$orderId" params={{ orderId: o.id }}>Obsługa</Link></Button></td>
                   <td className="text-right"><Button variant="ghost" size="icon" aria-label="Usuń" onClick={() => remove(o)}><Trash2 className="text-destructive" /></Button></td>
                 </tr>)}</tbody>
               </table>
