@@ -41,6 +41,7 @@ function CustomerOrderPage() {
   const [shots, setShots] = useState<Shot[]>([]);
   const [revisions, setRevisions] = useState<RevisionRequest[]>([]);
   const [activeShot, setActiveShot] = useState(0);
+  const [lightbox, setLightbox] = useState(false);
   const [message, setMessage] = useState("");
   const [attachment, setAttachment] = useState<File | null>(null);
   const [mode, setMode] = useState<"details" | "revision">("details");
@@ -155,14 +156,13 @@ function CustomerOrderPage() {
     <div className="grid gap-5 lg:grid-cols-[1.3fr_1fr]">
       <section className="rounded-lg border border-border bg-card p-4 shadow-sm">
         <h2 className="text-[13px] font-extrabold">{currentVisualization ? `Wizualizacja projektu (v${currentVisualization.version})` : "Wizualizacja projektu"}</h2>
-        {currentVisualization && currentShots.length > 0 ? <div className="mt-3 grid gap-3 sm:grid-cols-[64px_1fr]">
-          <div className="flex gap-2 overflow-x-auto sm:max-h-[420px] sm:flex-col sm:overflow-y-auto">{currentShots.map((s, index) => <button type="button" key={s.id} onClick={() => setActiveShot(index)} className={`size-14 shrink-0 overflow-hidden rounded-md border-2 bg-muted transition-colors ${index === activeShot ? "border-primary" : "border-transparent hover:border-border"}`}><img src={s.url} alt={`Ujęcie ${index + 1}`} className="size-full object-cover" /></button>)}</div>
-          <div className="relative overflow-hidden rounded-md bg-muted">
-            <img src={shot?.url} alt={currentVisualization.name} className="h-[420px] w-full object-contain" />
-            {currentShots.length > 1 && <><Button size="icon" variant="secondary" className="absolute left-2 top-1/2 size-7 -translate-y-1/2 rounded-full bg-card shadow" onClick={() => setActiveShot(i => (i - 1 + currentShots.length) % currentShots.length)} aria-label="Poprzednie"><ChevronLeft /></Button><Button size="icon" variant="secondary" className="absolute right-2 top-1/2 size-7 -translate-y-1/2 rounded-full bg-card shadow" onClick={() => setActiveShot(i => (i + 1) % currentShots.length)} aria-label="Następne"><ChevronRight /></Button></>}
-            {shot && <a href={shot.url} target="_blank" rel="noreferrer" className="absolute bottom-2 right-2 inline-flex items-center gap-1.5 rounded-md bg-card px-2.5 py-1.5 text-[10px] font-semibold shadow"><Expand className="size-3" /> Otwórz w nowym oknie <ArrowRight className="size-3" /></a>}
-          </div>
-        </div> : <div className="mt-3 grid min-h-[420px] place-items-center rounded-md bg-muted/50 p-6 text-center"><div><span className="mx-auto grid size-12 place-items-center rounded-full bg-brand-soft text-primary">{active <= 1 ? <Pencil className="size-5" /> : <Camera className="size-5" />}</span><h3 className="mt-3 text-[13px] font-extrabold">{active === 0 ? "Zamówienie oczekuje na zatwierdzenie" : "Przygotowujemy wizualizację"}</h3><p className="mt-1 text-[11px] text-muted-foreground">{active === 0 ? "Wkrótce sprawdzimy Twoje zamówienie i rozpoczniemy projektowanie." : "Pojawi się tutaj, gdy będzie gotowa do Twojej akceptacji."}</p></div></div>}
+        {currentVisualization && currentShots.length > 0 ? <div className={`mt-3 grid h-[460px] gap-2 ${currentShots.length === 1 ? "grid-cols-1" : currentShots.length === 2 ? "grid-cols-2" : "grid-cols-3"}`}>
+          {currentShots.slice(0, 3).map((s, index) => { const dim = index === 2; const more = currentShots.length - 2; return <button type="button" key={s.id} onClick={() => { setActiveShot(index); setLightbox(true); }} className="group relative overflow-hidden rounded-md bg-muted" aria-label={`Powiększ ujęcie ${index + 1}`}>
+            <img src={s.url} alt={`Ujęcie ${index + 1}`} className="size-full object-cover transition-transform duration-300 group-hover:scale-105" />
+            {dim ? <span className="absolute inset-0 grid place-items-center bg-foreground/55 text-background transition-colors group-hover:bg-foreground/45"><span className="text-center"><Expand className="mx-auto size-6" /><span className="mt-2 block text-[15px] font-extrabold">{more > 1 ? `+${more} więcej` : "Zobacz"}</span><span className="block text-[11px] opacity-80">Kliknij, aby powiększyć</span></span></span>
+              : <span className="absolute bottom-2 right-2 grid size-8 place-items-center rounded-full bg-card text-foreground opacity-0 shadow transition-opacity group-hover:opacity-100"><Expand className="size-4" /></span>}
+          </button>; })}
+        </div> : <div className="mt-3 grid min-h-[460px] place-items-center rounded-md bg-muted/50 p-6 text-center"><div><span className="mx-auto grid size-12 place-items-center rounded-full bg-brand-soft text-primary">{active <= 1 ? <Pencil className="size-5" /> : <Camera className="size-5" />}</span><h3 className="mt-3 text-[13px] font-extrabold">{active === 0 ? "Zamówienie oczekuje na zatwierdzenie" : "Przygotowujemy wizualizację"}</h3><p className="mt-1 text-[11px] text-muted-foreground">{active === 0 ? "Wkrótce sprawdzimy Twoje zamówienie i rozpoczniemy projektowanie." : "Pojawi się tutaj, gdy będzie gotowa do Twojej akceptacji."}</p></div></div>}
       </section>
 
       <section className="rounded-lg border border-border bg-card p-4 shadow-sm">
@@ -190,6 +190,14 @@ function CustomerOrderPage() {
 
     {events.length > 0 && <section className="rounded-lg border border-border bg-card p-4 shadow-sm"><h2 className="text-[13px] font-extrabold">Historia zamówienia</h2><div className="mt-3 space-y-3">{events.slice(0, 8).map(event => <div key={event.id} className="flex items-start gap-3 text-[12px]"><CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" /><span className="flex-1"><strong>{event.title}</strong>{event.details && event.event_type === "revision_requested" && <span className="block text-muted-foreground">{event.details}</span>}</span><time className="text-[11px] text-muted-foreground">{dateLabel(event.created_at)}</time></div>)}</div></section>}
     {revisions.some(r => r.status === "awaiting_payment") && <p className="text-[11px] text-muted-foreground">Twoja prośba o dodatkową rundę poprawek oczekuje na potwierdzenie.</p>}
+    {lightbox && shot && <div className="fixed inset-0 z-50 flex flex-col bg-foreground/90 p-4" onClick={() => setLightbox(false)} role="dialog" aria-modal="true">
+      <div className="flex items-center justify-between text-background"><span className="text-[13px] font-semibold">Ujęcie {activeShot + 1} / {currentShots.length}</span><button type="button" className="rounded-full p-2 text-2xl leading-none hover:bg-background/10" onClick={() => setLightbox(false)} aria-label="Zamknij">×</button></div>
+      <div className="relative flex min-h-0 flex-1 items-center justify-center" onClick={e => e.stopPropagation()}>
+        <img src={shot.url} alt={`Ujęcie ${activeShot + 1}`} className="max-h-full max-w-full rounded-md object-contain" />
+        {currentShots.length > 1 && <><Button size="icon" variant="secondary" className="absolute left-2 top-1/2 size-10 -translate-y-1/2 rounded-full" onClick={() => setActiveShot(i => (i - 1 + currentShots.length) % currentShots.length)} aria-label="Poprzednie"><ChevronLeft /></Button><Button size="icon" variant="secondary" className="absolute right-2 top-1/2 size-10 -translate-y-1/2 rounded-full" onClick={() => setActiveShot(i => (i + 1) % currentShots.length)} aria-label="Następne"><ChevronRight /></Button></>}
+      </div>
+      {currentShots.length > 1 && <div className="mt-3 flex justify-center gap-2 overflow-x-auto" onClick={e => e.stopPropagation()}>{currentShots.map((s, i) => <button type="button" key={s.id} onClick={() => setActiveShot(i)} className={`size-14 shrink-0 overflow-hidden rounded-md border-2 ${i === activeShot ? "border-primary" : "border-transparent opacity-60 hover:opacity-100"}`}><img src={s.url} alt="" className="size-full object-cover" /></button>)}</div>}
+    </div>}
   </div></Shell>;
 }
 
