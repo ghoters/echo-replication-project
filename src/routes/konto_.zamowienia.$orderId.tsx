@@ -124,7 +124,7 @@ function CustomerOrderPage() {
     </div>
   </Shell>;
 
-  return <Shell><div className="space-y-5 p-4 sm:p-6">
+  return <Shell><div className="space-y-4 p-4 sm:p-6">
     <div>
       <Link to="/konto" search={{ view: "orders" }} className="inline-flex items-center gap-1 text-[12px] font-semibold text-primary"><ArrowLeft className="size-3.5" /> Powrót do listy</Link>
       <div className="mt-2 flex flex-wrap items-end gap-3">
@@ -134,7 +134,7 @@ function CustomerOrderPage() {
       </div>
     </div>
 
-    <section className="overflow-x-auto rounded-lg border border-border bg-card px-4 py-4 shadow-sm">
+    <section className="overflow-x-auto rounded-lg border border-border bg-card px-4 py-3 shadow-sm">
       <div className="flex min-w-[560px] items-start">{ORDER_STAGES.map((stage, index) => { const Icon = STAGE_ICONS[index] ?? Check; const done = index < active; const cur = index === active; return <div key={stage} className="flex flex-1 items-start last:flex-none">
         <div className="flex w-20 flex-col items-center text-center">
           <span className={`grid size-8 place-items-center rounded-full border-2 transition-colors ${cur ? "border-primary bg-primary text-primary-foreground shadow-md" : done ? "border-primary bg-brand-soft text-primary" : "border-border bg-card text-muted-foreground"}`}>{done ? <Check className="size-4" /> : <Icon className="size-4" />}</span>
