@@ -124,7 +124,7 @@ function CustomerOrderPage() {
     </div>
   </Shell>;
 
-  return <Shell><div className="space-y-5 p-4 sm:p-6">
+  return <Shell><div className="space-y-4 p-4 sm:p-6">
     <div>
       <Link to="/konto" search={{ view: "orders" }} className="inline-flex items-center gap-1 text-[12px] font-semibold text-primary"><ArrowLeft className="size-3.5" /> Powrót do listy</Link>
       <div className="mt-2 flex flex-wrap items-end gap-3">
@@ -134,7 +134,7 @@ function CustomerOrderPage() {
       </div>
     </div>
 
-    <section className="overflow-x-auto rounded-lg border border-border bg-card px-4 py-4 shadow-sm">
+    <section className="overflow-x-auto rounded-lg border border-border bg-card px-4 py-3 shadow-sm">
       <div className="flex min-w-[560px] items-start">{ORDER_STAGES.map((stage, index) => { const Icon = STAGE_ICONS[index] ?? Check; const done = index < active; const cur = index === active; return <div key={stage} className="flex flex-1 items-start last:flex-none">
         <div className="flex w-20 flex-col items-center text-center">
           <span className={`grid size-8 place-items-center rounded-full border-2 transition-colors ${cur ? "border-primary bg-primary text-primary-foreground shadow-md" : done ? "border-primary bg-brand-soft text-primary" : "border-border bg-card text-muted-foreground"}`}>{done ? <Check className="size-4" /> : <Icon className="size-4" />}</span>
@@ -156,13 +156,13 @@ function CustomerOrderPage() {
       <section className="rounded-lg border border-border bg-card p-4 shadow-sm">
         <h2 className="text-[13px] font-extrabold">{currentVisualization ? `Wizualizacja projektu (v${currentVisualization.version})` : "Wizualizacja projektu"}</h2>
         {currentVisualization && currentShots.length > 0 ? <div className="mt-3 grid gap-3 sm:grid-cols-[64px_1fr]">
-          <div className="flex gap-2 overflow-x-auto sm:max-h-[300px] sm:flex-col sm:overflow-y-auto">{currentShots.map((s, index) => <button type="button" key={s.id} onClick={() => setActiveShot(index)} className={`size-14 shrink-0 overflow-hidden rounded-md border-2 bg-muted transition-colors ${index === activeShot ? "border-primary" : "border-transparent hover:border-border"}`}><img src={s.url} alt={`Ujęcie ${index + 1}`} className="size-full object-cover" /></button>)}</div>
+          <div className="flex gap-2 overflow-x-auto sm:max-h-[420px] sm:flex-col sm:overflow-y-auto">{currentShots.map((s, index) => <button type="button" key={s.id} onClick={() => setActiveShot(index)} className={`size-14 shrink-0 overflow-hidden rounded-md border-2 bg-muted transition-colors ${index === activeShot ? "border-primary" : "border-transparent hover:border-border"}`}><img src={s.url} alt={`Ujęcie ${index + 1}`} className="size-full object-cover" /></button>)}</div>
           <div className="relative overflow-hidden rounded-md bg-muted">
-            <img src={shot?.url} alt={currentVisualization.name} className="h-[300px] w-full object-contain" />
+            <img src={shot?.url} alt={currentVisualization.name} className="h-[420px] w-full object-contain" />
             {currentShots.length > 1 && <><Button size="icon" variant="secondary" className="absolute left-2 top-1/2 size-7 -translate-y-1/2 rounded-full bg-card shadow" onClick={() => setActiveShot(i => (i - 1 + currentShots.length) % currentShots.length)} aria-label="Poprzednie"><ChevronLeft /></Button><Button size="icon" variant="secondary" className="absolute right-2 top-1/2 size-7 -translate-y-1/2 rounded-full bg-card shadow" onClick={() => setActiveShot(i => (i + 1) % currentShots.length)} aria-label="Następne"><ChevronRight /></Button></>}
             {shot && <a href={shot.url} target="_blank" rel="noreferrer" className="absolute bottom-2 right-2 inline-flex items-center gap-1.5 rounded-md bg-card px-2.5 py-1.5 text-[10px] font-semibold shadow"><Expand className="size-3" /> Otwórz w nowym oknie <ArrowRight className="size-3" /></a>}
           </div>
-        </div> : <div className="mt-3 grid min-h-[300px] place-items-center rounded-md bg-muted/50 p-6 text-center"><div><span className="mx-auto grid size-12 place-items-center rounded-full bg-brand-soft text-primary">{active <= 1 ? <Pencil className="size-5" /> : <Camera className="size-5" />}</span><h3 className="mt-3 text-[13px] font-extrabold">{active === 0 ? "Zamówienie oczekuje na zatwierdzenie" : "Przygotowujemy wizualizację"}</h3><p className="mt-1 text-[11px] text-muted-foreground">{active === 0 ? "Wkrótce sprawdzimy Twoje zamówienie i rozpoczniemy projektowanie." : "Pojawi się tutaj, gdy będzie gotowa do Twojej akceptacji."}</p></div></div>}
+        </div> : <div className="mt-3 grid min-h-[420px] place-items-center rounded-md bg-muted/50 p-6 text-center"><div><span className="mx-auto grid size-12 place-items-center rounded-full bg-brand-soft text-primary">{active <= 1 ? <Pencil className="size-5" /> : <Camera className="size-5" />}</span><h3 className="mt-3 text-[13px] font-extrabold">{active === 0 ? "Zamówienie oczekuje na zatwierdzenie" : "Przygotowujemy wizualizację"}</h3><p className="mt-1 text-[11px] text-muted-foreground">{active === 0 ? "Wkrótce sprawdzimy Twoje zamówienie i rozpoczniemy projektowanie." : "Pojawi się tutaj, gdy będzie gotowa do Twojej akceptacji."}</p></div></div>}
       </section>
 
       <section className="rounded-lg border border-border bg-card p-4 shadow-sm">
