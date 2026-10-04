@@ -151,8 +151,9 @@ function AccountPage() {
               ];
               const idx = cur ? Math.max(0, stages.findIndex(s => s.name === cur.status)) : -1;
               const fmt = (d: Date) => d.toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" });
-              const start = cur ? new Date(new Date(cur.created_at).getTime() + 14 * 864e5) : null;
-              const end = cur ? new Date(new Date(cur.created_at).getTime() + 18 * 864e5) : null;
+              const start = cur?.estimated_start ? new Date(cur.estimated_start) : null;
+              const end = cur?.estimated_end ? new Date(cur.estimated_end) : null;
+              const plannedLabel = end ? (start ? `${fmt(start)} – ${fmt(end)}` : fmt(end)) : start ? `od ${fmt(start)}` : "Termin podamy po zatwierdzeniu";
               const needsAction = cur && (cur.status === "Wizualizacja" || cur.status === "Poprawki");
               return <div className="grid gap-4 lg:grid-cols-[1fr_1.15fr]">
                 <section className="relative min-h-[260px] overflow-hidden rounded-lg border border-border bg-gradient-to-br from-secondary via-card to-background p-6 shadow-sm">
@@ -180,7 +181,7 @@ function AccountPage() {
                       <span className={`relative z-10 grid size-8 place-items-center rounded-full border ${active ? "border-primary bg-primary text-primary-foreground" : done ? "border-primary/30 bg-brand-soft text-primary" : "border-border bg-card text-muted-foreground"}`}><Icon className="size-3.5" /></span>
                       <span className={`mt-1.5 text-[8px] leading-tight sm:text-[9px] ${active ? "font-bold text-primary" : "text-muted-foreground"}`}>{s.name}</span>
                     </li>; })}</ol>
-                    <div className="mt-5 flex items-center gap-4 rounded-lg bg-brand-soft p-4"><Clock3 className="size-7 shrink-0 text-primary" /><div><p className="text-[12px] text-muted-foreground">Planowane zakończenie</p><p className="text-lg font-extrabold text-primary">{start!.getDate()} – {fmt(end!)}</p></div></div>
+                    <div className="mt-5 flex items-center gap-4 rounded-lg bg-brand-soft p-4"><Clock3 className="size-7 shrink-0 text-primary" /><div><p className="text-[12px] text-muted-foreground">Planowane zakończenie</p><p className="text-lg font-extrabold text-primary">{plannedLabel}</p></div></div>
                   </> : <div className="flex h-full flex-col justify-center"><p className="text-[13px] font-semibold">Twoje aktualne zamówienie</p><p className="mt-2 text-[13px] text-muted-foreground">Nie masz jeszcze aktywnego zamówienia. Tutaj zobaczysz postęp realizacji: od płatności, przez projekt i druk, aż po wysyłkę.</p><Button asChild variant="outline" className="mt-4 w-fit border-primary/40 text-primary"><Link to="/sklep">Zobacz gotowe modele <ArrowRight /></Link></Button></div>}
                 </section>
               </div>;
