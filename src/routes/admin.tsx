@@ -102,7 +102,7 @@ function AdminPage() {
   }, []);
 
   const who = (id: string) => profiles.find(x => x.id === id);
-  const update = async (id: string, patch: Partial<Order>) => {
+  const update = async (id: string, patch: import("@/integrations/supabase/types").Database["public"]["Tables"]["orders"]["Update"]) => {
     const { error } = await supabase.from("orders").update(patch).eq("id", id);
     if (error) setErr(error.message); else load();
   };
