@@ -182,7 +182,7 @@ function AdminPage() {
                 {thumbs[o.id] ? <img src={thumbs[o.id]} alt="" className="size-16 shrink-0 rounded-md border border-border object-cover" /> : <div className="grid size-16 shrink-0 place-items-center rounded-md border border-border bg-muted text-[10px] font-bold text-muted-foreground">3D</div>}
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-[15px] font-extrabold">#{o.order_number}</span>
+                    <span className="text-[15px] font-extrabold">{o.order_number.startsWith("#") ? o.order_number : `#${o.order_number}`}</span>
                     <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-extrabold ${statusStyle[o.status] ?? "bg-muted text-foreground"}`}>{o.status}</span>
                   </div>
                   <p className="mt-0.5 truncate text-[13px] font-semibold">{configSummary(o)}</p>
