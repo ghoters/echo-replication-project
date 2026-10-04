@@ -1,6 +1,6 @@
 import type { Database } from "@/integrations/supabase/types";
 
-export const ORDER_STAGES = ["Opłacone", "Projektowanie", "Wizualizacja", "Modelowanie", "Druk", "Malowanie", "Gotowe", "Wysłane"] as const;
+export const ORDER_STAGES = ["Opłacone", "Projektowanie", "Wizualizacja", "Produkcja", "Gotowe", "Wysłane"] as const;
 export const ORDER_STATUSES = [...ORDER_STAGES, "Poprawki", "Anulowane"] as const;
 
 export type Order = Database["public"]["Tables"]["orders"]["Row"];
