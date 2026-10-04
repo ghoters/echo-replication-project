@@ -2,6 +2,7 @@ export type PaymentSummary = {
   figurinePrice: number;
   deliveryPrice: number;
   deliveryLabel: "Paczkomat" | "Kurier";
+  configuration?: Record<string, string>;
 };
 
 export const PAYMENT_SUMMARY_KEY = "prezent3d-payment-summary";

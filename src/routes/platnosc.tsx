@@ -69,7 +69,7 @@ function PaymentPage() {
             window.sessionStorage.setItem(ORDER_PLACED_KEY, "1");
             window.sessionStorage.setItem(ORDER_NUMBER_KEY, orderNumber);
             const { data: { user } } = await supabase.auth.getUser();
-            if (user) await supabase.from("orders").insert({ user_id: user.id, order_number: orderNumber, figurine_price: summary.figurinePrice, delivery_price: summary.deliveryPrice, delivery_label: summary.deliveryLabel });
+            if (user) await supabase.from("orders").insert({ user_id: user.id, order_number: orderNumber, figurine_price: summary.figurinePrice, delivery_price: summary.deliveryPrice, delivery_label: summary.deliveryLabel, configuration: summary.configuration ?? {} });
             navigate({ to: "/potwierdzenie" });
           }}>Zapłać i złóż zamówienie <ArrowRight aria-hidden="true" /></Button>
         </section>

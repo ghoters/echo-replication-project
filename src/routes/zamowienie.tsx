@@ -140,7 +140,19 @@ function OrderPage() {
     if (!accepted) nextErrors["accepted"] = "Zaznacz wymaganą zgodę.";
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length === 0) {
-      savePaymentSummary({ figurinePrice, deliveryPrice, deliveryLabel: delivery === "parcel" ? "Paczkomat" : "Kurier" });
+      savePaymentSummary({
+        figurinePrice,
+        deliveryPrice,
+        deliveryLabel: delivery === "parcel" ? "Paczkomat" : "Kurier",
+        configuration: {
+          title: subjectLabel,
+          size: size?.label ?? "",
+          finish: finishLabel ?? "",
+          base: config!.base === "personalized" && config!.graverText ? `${base?.label} — ${config!.graverText}` : base?.label ?? "",
+          people: subjectLabel,
+          extras: config!.subjects.includes("custom") ? (config!.customText || "Własny element") : "Brak",
+        },
+      });
       void navigate({ to: "/platnosc" });
     }
   }
