@@ -100,6 +100,11 @@ function AdminOrderPage() {
   return <Shell><div className="space-y-5 p-4 sm:p-6">
     <div><Link to="/admin" className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary"><ArrowLeft className="size-3" /> Panel admina</Link><div className="mt-2 flex flex-wrap items-center gap-3"><h1 className="text-xl font-extrabold sm:text-2xl">{order.order_number}</h1><span className="rounded-full bg-secondary px-3 py-1 text-[10px] font-bold text-primary">{order.status}</span><strong className="ml-auto text-sm">{money(Number(order.figurine_price) + Number(order.delivery_price))}</strong></div><p className="mt-1 text-[11px] text-muted-foreground">{profile?.display_name || "Klient"} · {profile?.email || order.user_id}</p></div>
     {feedback && <p className="rounded-md border border-primary/30 bg-secondary px-4 py-3 text-[12px]">{feedback}</p>}
+    <AdminAlert events={events} revisions={revisions} lastMsg={lastMsg} />
+    {(() => {
+      const latest = events[0];
+      return latest ? <div className="hidden" data-latest={latest.id} /> : null;
+    })()}
     <div className="grid gap-5 lg:grid-cols-[1.25fr_.75fr]">
       <div className="space-y-5">
 <section className="rounded-md border border-primary/30 bg-secondary/50 p-4"><h2 className="text-sm font-extrabold">Następny krok</h2>{(() => {
@@ -126,3 +131,17 @@ function AdminOrderPage() {
 }
 
 function Shell({ children }: { children: React.ReactNode }) { return <div className="flex min-h-screen flex-col bg-background"><SiteHeader /><main className="section-shell-wide w-full flex-1 py-6">{children}</main><SiteFooter /></div>; }
+
+const when = (v: string) => new Date(v).toLocaleString("pl-PL", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+
+function AdminAlert({ events, revisions, lastMsg }: { events: OrderEvent[]; revisions: RevisionRequest[]; lastMsg: { from_admin: boolean; body: string; created_at: string } | null }) {
+  const lastPublished = events.find(e => e.event_type === "visualization_published");
+  const accepted = events.find(e => e.event_type === "visualization_accepted");
+  const rev = revisions[0];
+  const alerts: { at: string; tone: string; icon: typeof Send; title: string; text?: string }[] = [];
+  if (rev && (!lastPublished || rev.created_at > lastPublished.created_at)) alerts.push({ at: rev.created_at, tone: "border-[hsl(30_90%_50%)] bg-[hsl(30_90%_50%/0.1)]", icon: AlertTriangle, title: rev.status === "awaiting_payment" ? "Klient prosi o płatną rundę poprawek" : `Klient zgłosił poprawki (runda ${rev.round_number})`, text: rev.message });
+  if (accepted && (!lastPublished || accepted.created_at > lastPublished.created_at)) alerts.push({ at: accepted.created_at, tone: "border-[hsl(145_60%_38%)] bg-[hsl(145_60%_38%/0.1)]", icon: CheckCircle2, title: "Klient zaakceptował projekt", text: accepted.title });
+  if (lastMsg && !lastMsg.from_admin) alerts.push({ at: lastMsg.created_at, tone: "border-primary bg-secondary", icon: MessageSquare, title: "Nowa wiadomość od klienta — czeka na odpowiedź", text: lastMsg.body });
+  if (!alerts.length) return null;
+  return <div className="space-y-2">{alerts.sort((a, b) => b.at.localeCompare(a.at)).map((a, i) => <a key={i} href="#komunikacja" className={`flex items-start gap-3 rounded-md border-2 p-3 text-[12px] ${a.tone}`}><a.icon className="mt-0.5 size-5 shrink-0 text-primary" /><span className="flex-1"><strong className="block text-[13px]">{a.title}</strong>{a.text && <span className="line-clamp-2 text-muted-foreground">„{a.text}”</span>}</span><time className="text-[11px] font-semibold">{when(a.at)}</time></a>)}</div>;
+}
