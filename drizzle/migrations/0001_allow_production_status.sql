@@ -1,2 +1,0 @@
-ALTER TABLE public.orders DROP CONSTRAINT IF EXISTS orders_status_workflow_check;
-ALTER TABLE public.orders ADD CONSTRAINT orders_status_workflow_check CHECK (status = ANY (ARRAY['Opłacone','Projektowanie','Wizualizacja','Poprawki','Produkcja','Modelowanie','Druk','Malowanie','Gotowe','Wysłane','Anulowane'])) NOT VALID;
