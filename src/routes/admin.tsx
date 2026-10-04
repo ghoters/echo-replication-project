@@ -46,7 +46,6 @@ const statusStyle: Record<string, string> = {
 };
 
 const fmtDate = (v: string) => new Date(v).toLocaleDateString("pl-PL", { day: "2-digit", month: "2-digit", year: "numeric" });
-const fmtTime = (v: string) => new Date(v).toLocaleString("pl-PL", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
 
 function AdminPage() {
   const [state, setState] = useState<"loading" | "denied" | "ok">("loading");
