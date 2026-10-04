@@ -41,6 +41,7 @@ function CustomerOrderPage() {
   const [shots, setShots] = useState<Shot[]>([]);
   const [revisions, setRevisions] = useState<RevisionRequest[]>([]);
   const [activeShot, setActiveShot] = useState(0);
+  const [lightbox, setLightbox] = useState(false);
   const [message, setMessage] = useState("");
   const [attachment, setAttachment] = useState<File | null>(null);
   const [mode, setMode] = useState<"details" | "revision">("details");
