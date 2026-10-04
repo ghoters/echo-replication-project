@@ -1,11 +1,11 @@
 {
-  "asset_id": "84d3c53f-b171-41de-b4bf-03320781e5a7",
-  "content_type": "image/jpeg",
-  "created_at": "2026-10-03T01:50:01Z",
+  "version": 1,
+  "asset_id": "802f2606-b9c7-46fe-b82c-423f91686fa2",
+  "project_id": "f922ddd7-fbc0-4b39-9b48-4adf838c4bad",
+  "url": "/__l5e/assets-v1/802f2606-b9c7-46fe-b82c-423f91686fa2/dlaczego-warto4.jpg",
+  "r2_key": "a/v1/f922ddd7-fbc0-4b39-9b48-4adf838c4bad/802f2606-b9c7-46fe-b82c-423f91686fa2/dlaczego-warto4.jpg",
   "original_filename": "dlaczego-warto4.jpg",
-  "project_id": "d3fa59bd-b19f-4ad6-8918-179b28425315",
-  "r2_key": "a/v1/d3fa59bd-b19f-4ad6-8918-179b28425315/84d3c53f-b171-41de-b4bf-03320781e5a7/dlaczego-warto4.jpg",
   "size": 143886,
-  "url": "/__l5e/assets-v1/84d3c53f-b171-41de-b4bf-03320781e5a7/dlaczego-warto4.jpg",
-  "version": 1
+  "content_type": "image/jpeg",
+  "created_at": "2026-10-04T03:10:46Z"
 }
