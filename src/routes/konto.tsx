@@ -52,7 +52,7 @@ function AccountPage() {
   }, [currentView]);
   const [query, setQuery] = useState("");
   const [noticeOpen, setNoticeOpen] = useState(false);
-  const [orders, setOrders] = useState<{ id: string; order_number: string; figurine_price: number; delivery_price: number; delivery_label: string; status: string; created_at: string; product_type: string | null; configuration: { title?: string } | null }[]>([]);
+  const [orders, setOrders] = useState<{ id: string; order_number: string; figurine_price: number; delivery_price: number; delivery_label: string; status: string; created_at: string; product_type: string | null; configuration: { title?: string } | null; estimated_start?: string | null; estimated_end?: string | null }[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [profile, setProfile] = useState<{ display_name: string; email: string } | null>(null);
   const [settings, setSettings] = useState({ newsletter: true, orderStatus: true, savedAddresses: true });
