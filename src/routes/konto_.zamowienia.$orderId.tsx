@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ORDER_STAGES, dateLabel, money, safeFileName, statusIndex, type Order, type OrderEvent, type RevisionRequest, type Visualization, type VisualizationImage } from "@/lib/order-workflow";
 import logoAsset from "@/assets/logo.png.asset.json";
 
-export const Route = createFileRoute("/konto/zamowienia/$orderId")({
+export const Route = createFileRoute("/konto_/zamowienia/$orderId")({
   ssr: false,
   head: () => ({ meta: [
     { title: "Szczegóły zamówienia — prezent3d.com" },
