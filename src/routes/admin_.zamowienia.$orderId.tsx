@@ -7,7 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { ORDER_STATUSES, dateLabel, money, safeFileName, type Order, type OrderEvent, type OrderFile, type RevisionRequest, type Visualization, type VisualizationImage } from "@/lib/order-workflow";
 
-export const Route = createFileRoute("/admin/zamowienia/$orderId")({
+export const Route = createFileRoute("/admin_/zamowienia/$orderId")({
   ssr: false,
   head: () => ({ meta: [
     { title: "Obsługa zamówienia — prezent3d.com" },
