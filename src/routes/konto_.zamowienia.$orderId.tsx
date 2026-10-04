@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
+import { OrderMessages } from "@/components/OrderMessages";
 import { ORDER_STAGES, dateLabel, money, safeFileName, statusIndex, type Order, type OrderEvent, type RevisionRequest, type Visualization, type VisualizationImage } from "@/lib/order-workflow";
 import logoAsset from "@/assets/logo.png.asset.json";
 
@@ -145,6 +146,12 @@ function CustomerOrderPage() {
 
     {feedback && <p className="rounded-md border border-primary/30 bg-secondary px-4 py-3 text-[12px]">{feedback}</p>}
 
+    {(order.status === "Wysłane" || order.tracking_number) && <section className="flex flex-wrap items-center gap-4 rounded-lg border border-primary/30 bg-brand-soft p-5">
+      <span className="grid size-11 shrink-0 place-items-center rounded-full bg-card text-primary"><Truck className="size-5" /></span>
+      <div className="min-w-0 flex-1"><h2 className="text-[14px] font-extrabold">{order.status === "Wysłane" ? "Twoja paczka jest w drodze!" : "Przesyłka przygotowana"}</h2><p className="mt-1 text-[12px] text-muted-foreground">{order.courier_name ?? "Kurier"}{order.tracking_number ? ` · nr przesyłki: ${order.tracking_number}` : ""}</p></div>
+      {order.tracking_url && <Button asChild className="font-bold"><a href={order.tracking_url} target="_blank" rel="noreferrer">Śledź przesyłkę <ArrowRight /></a></Button>}
+    </section>}
+
     <div className="grid gap-5 lg:grid-cols-[1.3fr_1fr]">
       <section className="rounded-lg border border-border bg-card p-4 shadow-sm">
         <h2 className="text-[13px] font-extrabold">{currentVisualization ? `Wizualizacja projektu (v${currentVisualization.version})` : "Wizualizacja projektu"}</h2>
@@ -168,7 +175,8 @@ function CustomerOrderPage() {
           <Row label="Liczba osób" value={val("people")} />
           <Row label="Dodatkowe elementy" value={val("extras", "Brak")} />
           <Row label="Dostawa" value={order.delivery_label || "—"} />
-          {order.tracking_number && <Row label="Przesyłka" value={order.tracking_url ? <a href={order.tracking_url} target="_blank" rel="noreferrer" className="font-semibold text-primary underline">{order.courier_name ?? "Kurier"}: {order.tracking_number}</a> : `${order.courier_name ?? "Kurier"}: ${order.tracking_number}`} />}
+          <Row label="Planowany start" value={order.estimated_start ? dateLabel(order.estimated_start) : "Wkrótce podamy"} />
+          <Row label="Planowane zakończenie" value={order.estimated_end ? dateLabel(order.estimated_end) : "Wkrótce podamy"} />
         </dl>
       </section>
     </div>
@@ -177,6 +185,8 @@ function CustomerOrderPage() {
       <div className="flex gap-4"><span className="grid size-8 shrink-0 place-items-center rounded-full border-2 border-primary bg-card" /><div><h2 className="text-[14px] font-extrabold">Czy projekt wygląda tak, jak oczekujesz?</h2><p className="mt-1 text-[12px] text-muted-foreground">Sprawdź przygotowany projekt i zaakceptuj go lub zgłoś zmiany.</p></div></div>
       <div className="mt-4 grid gap-3 sm:grid-cols-2 sm:pl-12"><Button className="h-11 font-bold" onClick={accept}><Check /> Akceptuję projekt</Button><Button variant="outline" className="h-11 border-primary/40 bg-card font-bold text-primary hover:bg-card hover:text-primary" onClick={() => setMode("revision")}>Chcę wprowadzić zmiany</Button></div>
     </section>}
+
+    <OrderMessages orderId={order.id} />
 
     {events.length > 0 && <section className="rounded-lg border border-border bg-card p-4 shadow-sm"><h2 className="text-[13px] font-extrabold">Historia zamówienia</h2><div className="mt-3 space-y-3">{events.slice(0, 8).map(event => <div key={event.id} className="flex items-start gap-3 text-[12px]"><CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" /><span className="flex-1"><strong>{event.title}</strong>{event.details && event.event_type === "revision_requested" && <span className="block text-muted-foreground">{event.details}</span>}</span><time className="text-[11px] text-muted-foreground">{dateLabel(event.created_at)}</time></div>)}</div></section>}
     {revisions.some(r => r.status === "awaiting_payment") && <p className="text-[11px] text-muted-foreground">Twoja prośba o dodatkową rundę poprawek oczekuje na potwierdzenie.</p>}
