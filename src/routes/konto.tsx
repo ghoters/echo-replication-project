@@ -69,12 +69,12 @@ function AccountPage() {
   }, []);
   const [typeFilter, setTypeFilter] = useState<"Wszystkie" | "Figurki na zamówienie" | "Modele 3D">("Wszystkie");
   const [statusFilter, setStatusFilter] = useState<"Wszystkie" | "W realizacji" | "Wymaga działania" | "Zakończone">("Wszystkie");
-  const statusMap: Record<string, string[]> = { "W realizacji": ["Opłacone", "Projektowanie", "Wizualizacja", "Modelowanie", "Druk", "Malowanie", "W realizacji"], "Wymaga działania": ["Poprawki", "Wymaga działania"], "Zakończone": ["Gotowe", "Gotowe do pobrania", "Wysłane", "Zakończone"] };
+  const statusMap: Record<string, string[]> = { "W realizacji": ["Opłacone", "Projektowanie", "Wizualizacja", "Produkcja", "W realizacji"], "Wymaga działania": ["Poprawki", "Wymaga działania"], "Zakończone": ["Gotowe", "Gotowe do pobrania", "Wysłane", "Zakończone"] };
   const filtered = orders.filter(o => (!query || o.order_number.includes(query)) && (statusFilter === "Wszystkie" || statusMap[statusFilter]?.includes(o.status)) && (typeFilter === "Wszystkie" || (typeFilter === "Figurki na zamówienie" ? o.product_type !== "model_3d" : o.product_type === "model_3d")));
   const countFor = (label: string) => label === "Łączna liczba zamówień" ? orders.length : orders.filter(o => o.status === label).length;
   const statusStyle = (status: string): { label: string; className: string; icon: typeof CheckCircle2 | null } => {
     if (status === "Wizualizacja") return { label: "Wizualizacja gotowa", className: "bg-brand-soft text-primary", icon: null };
-    if (status === "Druk") return { label: "W druku", className: "bg-warning-soft text-warning", icon: Clock3 };
+    if (status === "Produkcja") return { label: "W produkcji", className: "bg-warning-soft text-warning", icon: Clock3 };
     if (status === "Wysłane") return { label: "Wysłane", className: "bg-success-soft text-success", icon: CheckCircle2 };
     if (status === "Gotowe" || status === "Zakończone" || status === "Gotowe do pobrania") return { label: "Zakończone", className: "bg-muted text-muted-foreground", icon: Download };
     if (status === "Poprawki" || status === "Wymaga działania") return { label: "Wymaga działania", className: "bg-warning-soft text-warning", icon: Clock3 };
@@ -146,8 +146,8 @@ function AccountPage() {
             {(() => {
               const cur = orders[0];
               const stages = [
-                { name: "Opłacone", icon: CreditCard }, { name: "Projektowanie", icon: Pencil }, { name: "Wizualizacja", icon: Camera }, { name: "Modelowanie", icon: Box },
-                { name: "Druk", icon: Package }, { name: "Malowanie", icon: Paintbrush }, { name: "Gotowe", icon: CheckCircle2 }, { name: "Wysłane", icon: Truck },
+                { name: "Opłacone", icon: CreditCard }, { name: "Projektowanie", icon: Pencil }, { name: "Wizualizacja", icon: Camera },
+                { name: "Produkcja", icon: Paintbrush }, { name: "Gotowe", icon: CheckCircle2 }, { name: "Wysłane", icon: Truck },
               ];
               const idx = cur ? Math.max(0, stages.findIndex(s => s.name === cur.status)) : -1;
               const fmt = (d: Date) => d.toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" });
